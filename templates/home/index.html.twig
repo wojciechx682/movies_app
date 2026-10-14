@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Filmy | Movie App{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row g-3">
+            {% for movie in movies %}
+                <div class="col-sm-6 col-md-4 col-lg-3">
+                    <div class="movie-tile h-100">
+                        {% if movie.posterPath %}
+                            <a href="{{ path('app_movie_show', { id: movie.id }) }}">
+                                <img
+                                    class="movie-poster"
+                                    src="{{ asset(movie.posterPath) }}"
+                                    alt="{{ 'Plakat filmu ' ~ movie.title }}"
+                                    loading="lazy"
+                                    width="300"
+                                    height="450"
+                                >
+                            </a>
+                        {% else %}
+                            <div class="movie-poster movie-poster--placeholder">
+                                <span>Plakat niedostępny</span>
+                            </div>
+                        {% endif %}
+                        <div class="movie-tile-content">
+                            <div>
+                                <a href="{{ path('app_movie_show', { id: movie.id }) }}">{{ movie.title }}</a>
+                            </div>
+                            <div>{{ movie.originalTitle }}</div>
+                            <div>{{ movie.description }}</div>
+                            <div>{{ movie.releaseYear }}</div>
+                            <div>{{ movie.runtimeMinutes }}</div>
+                            <div>{{ movie.director }}</div>
+                            {#                            <div>{{ movie.createdAt | date('Y-m-d') }}</div>#}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

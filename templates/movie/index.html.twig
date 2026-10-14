@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Movie index{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1>Movie index</h1>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Title</th>
+                    <th>OriginalTitle</th>
+                    <th>Description</th>
+                    <th>ReleaseYear</th>
+                    <th>RuntimeMinutes</th>
+                    <th>Director</th>
+                    <th>PosterPath</th>
+                    <th>CreatedAt</th>
+                    <th>UpdatedAt</th>
+                    <th>actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for movie in movies %}
+                <tr>
+                    <td>{{ movie.id }}</td>
+                    <td>{{ movie.title }}</td>
+                    <td>{{ movie.originalTitle }}</td>
+                    <td>{{ movie.description }}</td>
+                    <td>{{ movie.releaseYear }}</td>
+                    <td>{{ movie.runtimeMinutes }}</td>
+                    <td>{{ movie.director }}</td>
+                    <td>{% if movie.posterPath %}
+                            <img
+                                class="movie-poster"
+                                src="{{ asset(movie.posterPath) }}"
+                                alt="{{ 'Plakat filmu ' ~ movie.title }}"
+                                loading="lazy"
+                                width="300"
+                                height="450"
+                            >
+                        {% else %}
+                            <div class="movie-poster movie-poster--placeholder">
+                                <span>Plakat niedostępny</span>
+                            </div>
+                        {% endif %}</td>
+                    <td>{{ movie.createdAt ? movie.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                    <td>{{ movie.updatedAt ? movie.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                    <td>
+                        <a href="{{ path('app_movie_show', {'id': movie.id}) }}">show</a>
+                        <a href="{{ path('app_movie_edit', {'id': movie.id}) }}">edit</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="11">no records found</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <a href="{{ path('app_movie_new') }}">Create new</a>
+    </div>
+{% endblock %}
