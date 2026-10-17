@@ -6,6 +6,8 @@ use App\Repository\ReviewRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
+use Symfony\Component\Validator\Constraints as Assert;
+
 #[ORM\Entity(repositoryClass: ReviewRepository::class)]
 #[ORM\UniqueConstraint(
     name: 'UNIQ_REVIEW_USER_MOVIE',
@@ -26,7 +28,14 @@ class Review
     #[ORM\JoinColumn(nullable: false)]
     private ?Movie $movie = null;
 
+
     #[ORM\Column(type: Types::SMALLINT)]
+    #[Assert\NotBlank(message: 'Select a rating.')]
+    #[Assert\Range(
+        min: 1,
+        max: 10,
+        notInRangeMessage: 'The rating must be between {{ min }} and {{ max }}.',
+    )]
     private ?int $rating = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
@@ -77,7 +86,7 @@ class Review
         return $this->rating;
     }
 
-    public function setRating(int $rating): static
+    public function setRating(?int $rating): static
     {
         $this->rating = $rating;
 

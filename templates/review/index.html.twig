@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Review index{% endblock %}
+
+{% block body %}
+
+    <div class="container">
+        <h1>Review index</h1>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Rating</th>
+                    <th>Content</th>
+                    <th>CreatedAt</th>
+                    <th>UpdatedAt</th>
+                    <th>actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for review in reviews %}
+                <tr>
+                    <td>{{ review.id }}</td>
+                    <td>{{ review.rating }}</td>
+                    <td>{{ review.content }}</td>
+                    <td>{{ review.createdAt ? review.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                    <td>{{ review.updatedAt ? review.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                    <td>
+                        <a href="{{ path('app_review_show', {'id': review.id}) }}">show</a>
+                        {% if app.user and review.user is same as(app.user) %}
+                        <a href="{{ path('app_review_edit', {id: review.id}) }}">
+                            edit
+                        </a>
+                        {% endif %}
+{#                        <a href="{{ path('app_review_edit', {'id': review.id}) }}">edit</a>#}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6">no records found</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <a href="{{ path('app_review_new') }}">Create new</a>
+    </div>
+{% endblock %}
