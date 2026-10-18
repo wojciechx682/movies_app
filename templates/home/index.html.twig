@@ -3,6 +3,7 @@
 {% block title %}Filmy | Movie App{% endblock %}
 
 {% block body %}
+
     <div class="container">
 
         {% if app.user %}
@@ -10,7 +11,6 @@
                 You are logged in as {{ app.user.userIdentifier }}, <a href="{{ logout_path() }}">Logout</a>
             </div>
         {% endif %}
-
 
         <div class="row g-3">
             {% for movie in movies %}
@@ -36,9 +36,17 @@
                             <div>
                                 <a href="{{ path('app_movie_show', { id: movie.id }) }}">{{ movie.title }}</a>
                             </div>
-                            <div>{{ movie.originalTitle }}</div>
-                            <div>{{ movie.description }}</div>
-                            <div>{{ movie.releaseYear }}</div>
+
+                            {% if movie.originalTitle %}
+                                <div>{{ movie.originalTitle }} {{ movie.releaseYear }}</div>
+
+                            {% else %}
+                                <div>{{ movie.releaseYear }}</div>
+                            {% endif %}
+
+
+{#                            <div>{{ movie.description }}</div>#}
+
                             <div>{{ movie.runtimeMinutes }}</div>
                             <div>{{ movie.director }}</div>
                             {#                            <div>{{ movie.createdAt | date('Y-m-d') }}</div>#}
