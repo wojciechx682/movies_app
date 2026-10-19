@@ -16,6 +16,18 @@ class MovieRepository extends ServiceEntityRepository
         parent::__construct($registry, Movie::class);
     }
 
+    /**
+     * @return Movie[]
+     */
+    public function findAllWithGenres(): array
+    {
+        return $this->createQueryBuilder('m')
+            ->leftJoin('m.genres', 'g')
+            ->addSelect('g')
+            ->getQuery()
+            ->getResult();
+    }
+
 //    /**
 //     * @return Movie[] Returns an array of Movie objects
 //     */

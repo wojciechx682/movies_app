@@ -45,9 +45,13 @@
                             {% endif %}
 
 
+                            {% for genre in movie.genres %}
+                                <div>{{ genre.name }}</div>
+                            {% endfor %}
+
 {#                            <div>{{ movie.description }}</div>#}
 
-                            <div>{{ movie.runtimeMinutes }}</div>
+{#                            <div>{{ movie.runtimeMinutes }}</div>#}
                             <div>{{ movie.director }}</div>
                             {#                            <div>{{ movie.createdAt | date('Y-m-d') }}</div>#}
                         </div>

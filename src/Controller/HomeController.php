@@ -34,7 +34,9 @@ final class HomeController extends AbstractController
 //            'movies' => $movies
 //        ]);
 
-        $movies = $movieRepository->findAll();
+        //$movies = $movieRepository->findAll();
+
+        $movies = $movieRepository->findAllWithGenres();
 
         return $this->render('home/index.html.twig', [
             'movies' => $movies,
