@@ -71,10 +71,10 @@
 {#                        </li>#}
                     </ul>
 
-                    <form class="d-flex" role="search">
-        <input class="form-control me-2" type="search" placeholder="Movie Title" aria-label="Search"/>
-        <button class="btn btn-secondary" type="submit">Search</button>
-      </form>
+                    <form class="d-flex" role="search" action="{{ path('app_home') }}">
+                        <input class="form-control me-2" type="search" placeholder="Movie Title" aria-label="Search" name="title" value="{{ app.request.query.get('title', '') }}"/>
+                        <button class="btn btn-secondary" type="submit">Search</button>
+                    </form>
                     
                 </div>
             </div>

@@ -16,16 +16,31 @@ class MovieRepository extends ServiceEntityRepository
         parent::__construct($registry, Movie::class);
     }
 
-    /**
-     * @return Movie[]
-     */
-    public function findAllWithGenres(): array
+    // /**
+    //  * @return Movie[]
+    //  */
+    // public function findAllWithGenres(): array
+    // {
+    //     return $this->createQueryBuilder('m')
+    //         ->leftJoin('m.genres', 'g')
+    //         ->addSelect('g')
+    //         ->getQuery()
+    //         ->getResult();
+    // }
+
+    public function findAllWithGenres(string $title = ''): array
     {
-        return $this->createQueryBuilder('m')
+        $qb = $this->createQueryBuilder('m')
             ->leftJoin('m.genres', 'g')
-            ->addSelect('g')
-            ->getQuery()
-            ->getResult();
+            ->addSelect('g');
+
+        if (trim($title) !== '') {
+            $qb
+                ->andWhere('m.title LIKE :title')
+                ->setParameter('title', '%' . trim($title) . '%');
+        }
+
+        return $qb->getQuery()->getResult();
     }
 
 //    /**

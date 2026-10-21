@@ -23,6 +23,7 @@ final class HomeController extends AbstractController
     public function index(
         MovieRepository $movieRepository,
         #[MapQueryParameter] ?string $order = null,
+        #[MapQueryParameter] string $title = '',
     ): Response
     {
         // $movies = $movieRepository->findAll();
@@ -36,7 +37,9 @@ final class HomeController extends AbstractController
 
         //$movies = $movieRepository->findAll();
 
-        $movies = $movieRepository->findAllWithGenres();
+
+
+        $movies = $movieRepository->findAllWithGenres($title);
 
         return $this->render('home/index.html.twig', [
             'movies' => $movies,
