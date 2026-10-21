@@ -3,15 +3,64 @@
 {% block title %}Movie{% endblock %}
 
 {% block body %}
-    <div class="container">
-        <h1>Movie</h1>
 
-        <table class="table">
+    <div class="container">
+        
+        <div class="row g-3">
+
+            <div class="col-sm-4 col-md-4 col-lg-2">
+                <div class="movie-tile h-100">
+                    {% if movie.posterPath %}
+                        <img
+                            class="movie-poster"
+                            src="{{ asset(movie.posterPath) }}"
+                            alt="{{ 'Plakat filmu ' ~ movie.title }}"
+                            loading="lazy"
+                            width="300"
+                            height="450"
+                        >
+                    {% else %}
+                        <div class="movie-poster movie-poster--placeholder">
+                            <span>Plakat niedostępny</span>
+                        </div>
+                    {% endif %}
+
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="movie-title">{{ movie.title }}</div>
+
+                {% if movie.originalTitle %}
+                    <div>{{ movie.originalTitle }} {{ movie.releaseYear }}</div>
+                {% else %}
+                    <div>{{ movie.releaseYear }}</div>
+                {% endif %}
+
+                <div>{{ movie.runtimeMinutes }}</div>
+
+                <div>Director: {{ movie.director }}</div>
+
+            </div>
+
+        </div>
+
+        <div class="row g-3">
+            <div class="col">   
+                <h5>Description</h5>             
+                {{ movie.description }}
+            </div>           
+        </div>
+
+        
+
+        {# <table class="table">
+
             <tbody>
-                <tr>
-                    <th>Id</th>
-                    <td>{{ movie.id }}</td>
-                </tr>
+               <tr>
+                   <th>Id</th>
+                   <td>{{ movie.id }}</td>
+               </tr>
                 <tr>
                     <th>Title</th>
                     <td>{{ movie.title }}</td>
@@ -62,12 +111,14 @@
                     <td>{{ movie.updatedAt ? movie.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
                 </tr>
             </tbody>
-        </table>
+        </table> #}
 
         <a href="{{ path('app_movie_index') }}">back to list</a>
 
         <a href="{{ path('app_movie_edit', {'id': movie.id}) }}">edit</a>
 
         {{ include('movie/_delete_form.html.twig') }}
+        
     </div>
+
 {% endblock %}

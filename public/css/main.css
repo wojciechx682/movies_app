@@ -7,10 +7,11 @@ body {
     border-radius: 10px;
     overflow: hidden;
     /*padding: 20px;*/
+    box-shadow: 0px 0px 10px 3px #8888882f;
 
 }
 
-.movie-tile-content a {
+.movie-tile-content a, .movie-title {
     color: initial;
     text-decoration: none;
     font-size: 1.2em;
@@ -19,6 +20,7 @@ body {
 
 .movie-tile-content a:hover {
     color: #888888;
+    text-decoration: underline;
 }
 
 .movie-tile .movie-poster {
@@ -49,4 +51,8 @@ body {
 nav {
     /*background-color: #0059ff;*/
     margin-bottom: 16px;
+}
+
+h5 {
+    margin-top: .5rem;
 }
