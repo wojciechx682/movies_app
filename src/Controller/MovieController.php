@@ -16,6 +16,8 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+
 #[Route('/movie')]
 final class MovieController extends AbstractController
 {
@@ -27,6 +29,7 @@ final class MovieController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/new', name: 'app_movie_new', methods: ['GET', 'POST'])]
     public function new(
         Request $request,
@@ -84,6 +87,7 @@ final class MovieController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/{id}/edit', name: 'app_movie_edit', methods: ['GET', 'POST'])]
     public function edit(
         Request $request,
@@ -131,6 +135,7 @@ final class MovieController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/{id}', name: 'app_movie_delete', methods: ['POST'])]
     public function delete(Request $request, Movie $movie, EntityManagerInterface $entityManager): Response
     {
