@@ -113,6 +113,10 @@ final class MovieController extends AbstractController
         // dump($decimalPart);
         // exit();
 
+        // Pobranie recenzji tego filmu -->
+
+        
+
         return $this->render('movie/show.html.twig', [
             'movie' => $movie,
             'ratingAverage' => $ratingAverage,
@@ -121,6 +125,7 @@ final class MovieController extends AbstractController
             'remainingStars' => $remainingStars,
             'count' => $count,
             'commentsCount' => $commentsCount,
+            'reviews' => $reviews,
         ]);
     }
 

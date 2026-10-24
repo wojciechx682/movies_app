@@ -5,6 +5,43 @@
 {% block body %}
 
     <div class="container">
+        {% for review in reviews %}
+            <div class="row g-2 review mb-3 p-2 border rounded">              
+                <div>Rating: <span class="bold">{{ review.rating }}/10</span></div>
+                <div>{{ review.user.email }} {{ review.createdAt ? review.createdAt|date('d.m.Y H:i:s') : '' }}</div>
+                <div>{{ review.content ? review.content : 'Rating without comment' }}</div>             
+                {% if app.user and review.user is same as(app.user) %}
+                    <div class="d-flex align-items-center gap-2">
+                        <a href="{{ path('app_review_edit', {id: review.id}) }}" >
+                            edit
+                        </a>
+                        {{ include('review/_delete_form.html.twig') }}
+                    </div>
+                {% endif %}         
+            </div>
+        {% else %}
+            <div>No ratings</div>
+        {% endfor %}
+
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    {# <div class="container">
+
         <h1>Review index</h1>
 
         <table class="table">
@@ -33,7 +70,7 @@
                             edit
                         </a>
                         {% endif %}
-{#                        <a href="{{ path('app_review_edit', {'id': review.id}) }}">edit</a>#}
+
                     </td>
                 </tr>
             {% else %}
@@ -45,5 +82,5 @@
         </table>
 
         <a href="{{ path('app_review_new') }}">Create new</a>
-    </div>
+    </div> #}
 {% endblock %}
