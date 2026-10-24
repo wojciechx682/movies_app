@@ -31,17 +31,83 @@
             <div class="col">
                 <div class="movie-title">{{ movie.title }}</div>
 
-                {% if movie.originalTitle %}
-                    <div>{{ movie.originalTitle }} {{ movie.releaseYear }}</div>
-                {% else %}
-                    <div>{{ movie.releaseYear }}</div>
+                {% if movie.originalTitle %}   
+                    <div>{{ movie.originalTitle }} {{ movie.releaseYear }}</div>                 
+                    <div>
+                        {% for genre in movie.genres %}
+                            {{ genre.name }}{% if not loop.last %}, {% endif %}
+                        {% else %}
+                            No assigned genres.
+                        {% endfor %}
+                    </div>                    
+                {% else %} 
+                    <div>{{ movie.releaseYear }}</div>                   
+                    <div>
+                        {% for genre in movie.genres %}
+                            {{ genre.name }}{% if not loop.last %}, {% endif %}
+                        {% else %}
+                            No assigned genres.
+                        {% endfor %}
+                    </div>                    
                 {% endif %}
 
                 <div>{{ movie.runtimeMinutes }}</div>
 
                 <div>Director: {{ movie.director }}</div>
 
-                <div></div>
+                {# <div>{{ ratingAverage }}</div> #}
+
+                {% if ratingAverage is not null %}
+                    {% for i in 1..starDisplay|round(0, 'floor') %}
+                        <i class="bi bi-star-fill"></i>
+                    {% endfor %}
+
+                    {% if decimalPart >= 0.5 %}
+                        <i class="bi bi-star-half"></i>
+                    {% endif %}
+
+                    {% if remainingStars > 0 %}
+                        {% for i in 1..remainingStars %}
+                            <i class="bi bi-star"></i>
+                        {% endfor %}
+                        
+                    {% endif %}
+
+                    ({{ ratingAverage }})
+
+                    <div>
+
+                        {% if count < 2 %}
+                            {{ count }} rating, {{ commentsCount }} comment
+                        {% else %}
+                            {{ count }} ratings, 
+                            {% if commentsCount < 2 %}
+                                {{ commentsCount }} comment
+                            {% else %}
+                                {{ commentsCount }} comments
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                {% else %}
+                    <div>No ratings</div>
+                {% endif %}
+
+
+
+
+                {# <div>             
+                    {% for i in 1..starDisplay|round(0, 'floor') %}
+                        <i class="bi bi-star-fill"></i>
+                    {% endfor %}
+
+                    {% if decimalPart >= 0.5 %}
+                        <i class="bi bi-star-half"></i>
+                    {% endif %}
+
+                    ({{ ratingAverage }})
+                </div> #}
+
+                
 
             </div>
 
