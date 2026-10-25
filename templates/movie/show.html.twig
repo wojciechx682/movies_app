@@ -195,7 +195,25 @@
 
         {% endif %}
         
-        {% for review in reviews %}
+
+        
+        {# {% if app.user and userReview is not null and userReview.user is same as(app.user) %}
+            Nie możesz już dodać recenzji
+        {% elseif app.user %}
+            Możesz dodać recenzję :)
+            <h1>Create new Review</h1>
+            {{ include('movie/_review_form.html.twig') }}            
+        {% endif %} #}
+
+        {% if app.user and userReview is null %}
+            <div class="row g-3 review mb-4 p-2 border rounded"> 
+                {{ include('movie/_review_form.html.twig', {form: reviewForm}) }}
+            </div>
+        {% elseif app.user %}
+            {# <p>Masz już recenzję tego filmu.</p> #}
+        {% endif %}
+
+        {% for review in reviews %}            
             <div class="row g-2 review mb-4 p-2 border rounded">              
                 <div>Rating: <span class="bold">{{ review.rating }}/10</span></div>
                 <div>{{ review.user.email }} {{ review.createdAt ? review.createdAt|date('d.m.Y H:i:s') : '' }}</div>
@@ -209,7 +227,7 @@
                     </div>
                 {% endif %}         
             </div>
-        {% else %}
+        {% else %}            
             <div>No ratings</div>
         {% endfor %}
 

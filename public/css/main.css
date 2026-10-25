@@ -3,7 +3,7 @@ body {
 }
 
 .movie-tile, .review {
-    background-color: #e3e3e3;
+    background-color: #dadada;
     border-radius: 10px;
     overflow: hidden;
     /*padding: 20px;*/

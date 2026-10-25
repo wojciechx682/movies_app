@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Movie;
 use App\Form\MovieType;
 use App\Repository\MovieRepository;
+use App\Repository\ReviewRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,6 +18,10 @@ use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+
+use App\Entity\User;
+use App\Entity\Review;
+use App\Form\ReviewType;
 
 #[Route('/movie')]
 final class MovieController extends AbstractController
@@ -79,8 +84,13 @@ final class MovieController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_movie_show', methods: ['GET'])]
-    public function show(Movie $movie): Response
+    #[Route('/{id}', name: 'app_movie_show', methods: ['GET', 'POST'])]
+    public function show(
+        Movie $movie,
+        ReviewRepository $reviewRepository,
+        Request $request,
+        EntityManagerInterface $entityManager
+    ): Response
     {
         $reviews = $movie->getReviews(); // Lazy Loading      
 
@@ -113,7 +123,47 @@ final class MovieController extends AbstractController
         // dump($decimalPart);
         // exit();
 
-        // Pobranie recenzji tego filmu -->
+        // Sprawdzenie, czy zalogowany user dodał już recenzję do tego filmu (w celu wyświetleni/ukrycia formularza dodawania recenzji na stronie szczegółów filmu) -->
+
+        // $userReview = $reviewRepository->findOneBy([
+        //     'user' => $this->getUser(),
+        //     'movie' => $movie,
+        // ]);
+
+        $user = $this->getUser();
+        $userReview = null;
+        $reviewForm = null;
+
+        if ($user instanceof User) {
+
+            $userReview = $reviewRepository->findOneBy([
+                'user' => $user,
+                'movie' => $movie,
+            ]);
+
+            //dump($userReview); exit(); // może być Encją lub nullem
+
+            if ($userReview === null) {
+                $review = new Review();
+                $review->setUser($user);
+                $review->setMovie($movie);
+
+                $form = $this->createForm(ReviewType::class, $review);
+                $form->handleRequest($request);
+
+                if ($form->isSubmitted() && $form->isValid()) {
+                    $entityManager->persist($review);
+                    $entityManager->flush();
+
+                    return $this->redirectToRoute('app_movie_show', [
+                        'id' => $movie->getId(),
+                    ]);
+                }
+
+                $reviewForm = $form->createView();
+            }
+        }
+
 
         
 
@@ -126,6 +176,10 @@ final class MovieController extends AbstractController
             'count' => $count,
             'commentsCount' => $commentsCount,
             'reviews' => $reviews,
+            'userReview' => $userReview,
+            'reviewForm' => $reviewForm,
+            
+            
         ]);
     }
 

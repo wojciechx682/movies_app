@@ -46,10 +46,10 @@ class ReviewType extends AbstractType
 //                'class' => User::class,
 //                'choice_label' => 'id',
 //            ])
-            ->add('movie', EntityType::class, [
-                'class' => Movie::class,
-                'choice_label' => 'title',
-            ])
+            // ->add('movie', EntityType::class, [
+            //     'class' => Movie::class,
+            //     'choice_label' => 'title',
+            // ])
         ;
     }
 

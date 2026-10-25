@@ -79,7 +79,11 @@ final class ReviewController extends AbstractController
             $review->setUpdatedAt(new \DateTimeImmutable()); // Review edit date
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_review_index', [], Response::HTTP_SEE_OTHER);
+            //return $this->redirectToRoute('app_review_index', [], Response::HTTP_SEE_OTHER);
+
+            $movie = $review->getMovie();
+
+            return $this->redirectToRoute('app_movie_show', ['id' => $movie->getId()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('review/edit.html.twig', [
@@ -103,6 +107,8 @@ final class ReviewController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_review_index', [], Response::HTTP_SEE_OTHER);
+        $movie = $review->getMovie();
+
+        return $this->redirectToRoute('app_movie_show', ['id' => $movie->getId()], Response::HTTP_SEE_OTHER);
     }
 }
