@@ -11,6 +11,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+
 #[Route('/genre')]
 final class GenreController extends AbstractController
 {
@@ -22,6 +24,7 @@ final class GenreController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/new', name: 'app_genre_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -50,6 +53,7 @@ final class GenreController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/{id}/edit', name: 'app_genre_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Genre $genre, EntityManagerInterface $entityManager): Response
     {
@@ -68,6 +72,7 @@ final class GenreController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/{id}', name: 'app_genre_delete', methods: ['POST'])]
     public function delete(Request $request, Genre $genre, EntityManagerInterface $entityManager): Response
     {

@@ -5,7 +5,29 @@
 {% block body %}
 
     <div class="container">
-        <h1>Genre index</h1>
+        
+        <div class="row g-3">
+            <h3>Genres</h3>
+            {% for genre in genres %}
+                <div class="row g-3 genre">
+                    <div class="col-sm-6 d-flex align-items-center gap-2 mb-4">{{ genre.name }}</div>
+                    <div class="col-sm-6 d-flex justify-content-end align-items-center gap-2 mb-4">
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <a href="{{ path('app_genre_edit', {'id': genre.id}) }}">edit</a>
+                            {{ include('genre/_delete_form.html.twig') }}
+                        {% endif %}
+                    </div>
+                </div>
+            {% else %}
+                <div>No records found</div>
+            {% endfor %}
+
+            {% if is_granted('ROLE_ADMIN') %}
+                <a href="{{ path('app_genre_new') }}">Create new</a>
+            {% endif %}
+        </div>
+
+        {# <h1>Genre index</h1>
 
         <table class="table">
             <thead>
@@ -20,9 +42,11 @@
                 <tr>
                     <td>{{ genre.id }}</td>
                     <td>{{ genre.name }}</td>
-                    <td>
-                        <a href="{{ path('app_genre_show', {'id': genre.id}) }}">show</a>
-                        <a href="{{ path('app_genre_edit', {'id': genre.id}) }}">edit</a>
+                    <td>                           
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <a href="{{ path('app_genre_edit', {'id': genre.id}) }}">edit</a>
+                            {{ include('genre/_delete_form.html.twig') }}
+                        {% endif %}
                     </td>
                 </tr>
             {% else %}
@@ -33,6 +57,8 @@
             </tbody>
         </table>
 
-        <a href="{{ path('app_genre_new') }}">Create new</a>
+        {% if is_granted('ROLE_ADMIN') %}
+            <a href="{{ path('app_genre_new') }}">Create new</a>
+        {% endif %} #}
     </div>
 {% endblock %}
