@@ -24,6 +24,7 @@ use App\Entity\Review;
 use App\Form\ReviewType;
 
 use App\Service\MovieRatingService;
+use App\Service\MovieRuntimeFormatter;
 
 #[Route('/movie')]
 final class MovieController extends AbstractController
@@ -93,6 +94,7 @@ final class MovieController extends AbstractController
         Request $request,
         EntityManagerInterface $entityManager,
         MovieRatingService $movieRatingService,
+        MovieRuntimeFormatter $movieRuntimeFormatter,
     ): Response
     {       
         $movieRatingData = $movieRatingService->calculateAverage($movie);     
@@ -154,10 +156,15 @@ final class MovieController extends AbstractController
         }
 
 
-        
+        // Serwis zamieniający minuty na godziny i minuty (formatowanie czasu) - Czas trwania filmu w minutach -->
+
+        $formattedRuntime = $movieRuntimeFormatter->formatRuntime($movie);
+        // dump($formattedRuntime);
+        // exit();
 
         return $this->render('movie/show.html.twig', [
             'movie' => $movie,
+            'formattedRuntime' => $formattedRuntime,
             'ratingAverage' => $ratingAverage,
             'starDisplay' => $starDisplay,
             'decimalPart' => $decimalPart,
