@@ -23,6 +23,8 @@ use App\Entity\User;
 use App\Entity\Review;
 use App\Form\ReviewType;
 
+use App\Service\MovieRatingService;
+
 #[Route('/movie')]
 final class MovieController extends AbstractController
 {
@@ -89,38 +91,25 @@ final class MovieController extends AbstractController
         Movie $movie,
         ReviewRepository $reviewRepository,
         Request $request,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        MovieRatingService $movieRatingService,
     ): Response
-    {
-        $reviews = $movie->getReviews(); // Lazy Loading      
+    {       
+        $movieRatingData = $movieRatingService->calculateAverage($movie);     
 
-        $sum = 0; // suma recenzji (do obliczenia średniej wartości)
-        $count = 0; // liczba recenzji
-        $commentsCount = 0; // liczba komentarzy (do recenzji) - może być nullem, więc trzeba zabezpieczyć
-
-
-        for ($i = 0; $i < count($reviews); $i++) {
-            $rating = $reviews[$i]->getRating();
-            $sum += $rating;
-            $count++;
-
-            $comment = $reviews[$i]->getContent();
-            if ($comment !== null) {
-                $commentsCount++;
-            }
-        }
-
-        $ratingAverage = $count > 0 ? round($sum / $count, 1) : null;
-
-        $starDisplay = $count > 0 ? round(($sum / $count) * 2) / 2 : null;
-
-        $decimalPart = $starDisplay - ((int) floor($starDisplay));
-
-        $remainingStars = 10 - ceil($starDisplay);        
+        $reviews = $movieRatingData["reviews"]; 
+        $count = $movieRatingData["count"]; 
+        $commentsCount = $movieRatingData["commentsCount"]; 
+        $ratingAverage = $movieRatingData["ratingAverage"]; // 6.7
+        $starDisplay = $movieRatingData["starDisplay"]; // 6.5
+        $decimalPart = $movieRatingData["decimalPart"]; // 0.5
+        $remainingStars = $movieRatingData["remainingStars"]; // 3.0
 
         // dump($ratingAverage);   
         // dump($starDisplay);
         // dump($decimalPart);
+        // dump($remainingStars);
+        // dump($values);
         // exit();
 
         // Sprawdzenie, czy zalogowany user dodał już recenzję do tego filmu (w celu wyświetleni/ukrycia formularza dodawania recenzji na stronie szczegółów filmu) -->
