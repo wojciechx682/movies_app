@@ -56,7 +56,9 @@
                             {#                            <div>{{ movie.createdAt | date('Y-m-d') }}</div>#}
                         </div>
                     </div>
-                </div>
+                </div>            
+            {% else %}
+                <div>No movies found</div>
             {% endfor %}
         </div>
     </div>

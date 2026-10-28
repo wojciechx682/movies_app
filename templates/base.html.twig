@@ -35,9 +35,15 @@
                         <li class="nav-item">
                             <a class="nav-link active" aria-current="page" href="{{ path('app_home') }}">Home</a>
                         </li>
-                        {# <li class="nav-item">
-                            <a class="nav-link" aria-current="page" href="{{ path('app_genre_index') }}">Genres</a>
-                        </li> #}
+
+                        {% if is_granted('ROLE_ADMIN') %}
+
+                            <li class="nav-item">
+                                <a class="nav-link" aria-current="page" href="{{ path('app_genre_index') }}">Genres</a>
+                            </li>
+
+                        {% endif %}
+
                         {# <li class="nav-item">
                             <a class="nav-link" aria-current="page" href="{{ path('app_movie_index') }}">Movies</a>
                         </li> #}
