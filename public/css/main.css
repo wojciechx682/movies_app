@@ -21,6 +21,9 @@ body {
     font-size: 1.2em;
 }
 
+.dropdown button {
+    color: black !important;
+}
 
 .movie-tile-content a:hover {
     color: #888888;
