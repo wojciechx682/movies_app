@@ -26,7 +26,8 @@ final class HomeController extends AbstractController
         GenreRepository $genreRepository,
         // #[MapQueryParameter] ?string $order = null,
         #[MapQueryParameter] string $title = '',
-        #[MapQueryParameter] ?string $genre = null,        
+        #[MapQueryParameter] ?string $genre = null,    
+        #[MapQueryParameter] ?string $year = null,       
     ): Response
     {
         // $movies = $movieRepository->findAll();

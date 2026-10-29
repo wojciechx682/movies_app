@@ -48,7 +48,7 @@
 
                         {% if app.request.attributes.get('_route') == 'app_home' %}
                             <li class="nav-item">
-                                <div class="dropdown">
+                                {# <div class="dropdown">
                                     <button class="nav-link dropdown-toggle"
                                             type="button"
                                             data-bs-toggle="dropdown"
@@ -60,15 +60,27 @@
                                         {% for genre in genres %}
                                             <li>
                                                 <a class="dropdown-item"
-                                                href="{{ path('app_home', {genre: genre.name}) }}">
-                                                    {{ genre.name }}
+                                                    href="{{ path('app_home', {genre: genre.name}) }}">
+                                                        {{ genre.name }}
                                                 </a>
                                             </li>
                                         {% else %}
                                             <li><span class="dropdown-item-text">No assigned genres.</span></li>
                                         {% endfor %}
                                     </ul>
-                                </div>
+                                </div> #}
+
+                                <button
+                                        class="nav-link"
+                                        type="button"
+                                        data-bs-toggle="collapse"
+                                        data-bs-target="#movieFilters"
+                                        aria-expanded="false"
+                                        aria-controls="movieFilters"
+                                    >
+                                    Filters <i class="bi bi-chevron-down"></i>
+                                </button>
+                                                            
                             </li>
                         {% endif %}
 
@@ -111,8 +123,62 @@
                     </form>
                     
                 </div>
+                
             </div>
+            
         </nav>
+
+        {% if app.request.attributes.get('_route') == 'app_home' %}
+            <div class="collapse" id="movieFilters">
+                <section class="container-fluid border-top bg-body-tertiary py-3 px-3">
+                    <div class="mb-3">
+                        <h2 class="h6">Genres</h2>
+
+                        <div class="d-flex flex-wrap gap-2">
+
+                            <a
+                                class="btn btn-secondary"
+                                href="{{ path('app_home', {
+                                    title: app.request.query.get('title'),
+                                    year: app.request.query.get('year')
+                                }) }}"
+                            >
+                                All genres
+                            </a>
+
+                            {% for genre in genres %}
+                                
+
+                                {# <a class="btn btn-secondary" href="{{ path('app_home', {genre: genre.name}) }}" role="button">{{ genre.name }}</a> #}
+
+                                <a
+                                    class="btn btn-secondary"
+                                    href="{{ path('app_home', app.request.query.all()|merge({genre: genre.name})) }}"
+                                >
+                                    {{ genre.name }}
+                                </a>
+                            {% else %}
+                                <span>No genres available</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div>
+                        <h2 class="h6">Release year</h2>
+
+                        <div class="d-flex flex-wrap gap-2">
+                            <a class="btn btn-secondary" href="{{ path('app_home', app.request.query.all()|merge({year: 2026})) }}">2026</a>
+                            <a class="btn btn-secondary" href="{{ path('app_home', app.request.query.all()|merge({year: 2025})) }}">2025</a>
+                            <a class="btn btn-secondary" href="{{ path('app_home', app.request.query.all()|merge({year: 2024})) }}">2024</a>
+                            <a class="btn btn-secondary" href="{{ path('app_home', app.request.query.all()|merge({year: 2023})) }}">2023</a>
+                            <a class="btn btn-secondary" href="{{ path('app_home', app.request.query.all()|merge({year: 2022})) }}">2022</a>
+                            <a class="btn btn-secondary" href="{{ path('app_home', app.request.query.all()|merge({year: 2021})) }}">2021</a>
+                            <a class="btn btn-secondary" href="{{ path('app_home', app.request.query.all()|merge({year: 2020})) }}">2020</a>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        {% endif %}
 
         {% block body %}{% endblock %}
 
