@@ -26,6 +26,8 @@ use App\Form\ReviewType;
 use App\Service\MovieRatingService;
 use App\Service\MovieRuntimeFormatter;
 
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
+
 #[Route('/movie')]
 final class MovieController extends AbstractController
 {
@@ -89,6 +91,7 @@ final class MovieController extends AbstractController
 
     #[Route('/{id}', name: 'app_movie_show', methods: ['GET', 'POST'])]
     public function show(
+        #[MapEntity(message: 'Movie not found')]
         Movie $movie,
         ReviewRepository $reviewRepository,
         Request $request,
