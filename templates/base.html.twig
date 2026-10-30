@@ -26,7 +26,7 @@
     </head>
     <body>
 
-        <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <nav class="navbar navbar-expand-lg bg-body-tertiary mb-0">
             <div class="container-fluid">
                 {#                <a class="navbar-brand" href="#">Movie App</a>#}
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -130,87 +130,66 @@
 
         {% if app.request.attributes.get('_route') == 'app_home' %}
             <div class="collapse" id="movieFilters">
-                <form method="get" action="{{ path('app_home') }}">
-    {% if app.request.query.get('title') is not empty %}
-        <input
-            type="hidden"
-            name="title"
-            value="{{ app.request.query.get('title') }}"
-        >
-    {% endif %}
+                <section class="container-fluid border-top bg-body-tertiary py-3 px-3">
+                    
+                    <form method="get" action="{{ path('app_home') }}">
+                        <fieldset class="mb-3">
+                            <legend class="h6">Genres</legend>
 
-    <fieldset class="mb-3">
-        <legend class="h6">Genres</legend>
+                            <div class="d-flex flex-wrap gap-2">
+                                {% for genre in genres %}
+                                    <input
+                                        type="radio"
+                                        class="btn-check"
+                                        name="genre"
+                                        id="genre-{{ genre.id }}"
+                                        value="{{ genre.name }}"
+                                        autocomplete="off"
+                                        {% if app.request.query.get('genre') == genre.name %}checked{% endif %}
+                                    >
+                                    <label class="btn btn-outline-secondary" for="genre-{{ genre.id }}">
+                                        {{ genre.name }}
+                                    </label>
+                                {% else %}
+                                    <span>No genres available.</span>
+                                {% endfor %}
+                            </div>
+                        </fieldset>
 
-        <div class="d-flex flex-wrap gap-2">
-            <input
-                type="radio"
-                class="btn-check"
-                name="genre"
-                id="genre-all"
-                value="all"
-                autocomplete="off"
-                {% if app.request.query.get('genre') is empty or app.request.query.get('genre') == 'all' %}checked{% endif %}
-            >
-            <label class="btn btn-outline-secondary" for="genre-all">All genres</label>
+                        <fieldset class="mb-3">
+                            <legend class="h6">Release year</legend>
 
-            {% for genre in genres %}
-                <input
-                    type="radio"
-                    class="btn-check"
-                    name="genre"
-                    id="genre-{{ genre.id }}"
-                    value="{{ genre.name }}"
-                    autocomplete="off"
-                    {% if app.request.query.get('genre') == genre.name %}checked{% endif %}
-                >
-                <label class="btn btn-outline-secondary" for="genre-{{ genre.id }}">
-                    {{ genre.name }}
-                </label>
-            {% endfor %}
-        </div>
-    </fieldset>
+                            <div class="d-flex flex-wrap gap-2">
+                                {% for year in range(2026, 1990, -1) %}
+                                    <input
+                                        type="radio"
+                                        class="btn-check"
+                                        name="year"
+                                        id="year-{{ year }}"
+                                        value="{{ year }}"
+                                        autocomplete="off"
+                                        {% if app.request.query.get('year') == year %}checked{% endif %}
+                                    >
+                                    <label class="btn btn-outline-secondary" for="year-{{ year }}">
+                                        {{ year }}
+                                    </label>
+                                {% endfor %}
+                            </div>
+                        </fieldset>
 
-    <fieldset class="mb-3">
-        <legend class="h6">Release year</legend>
+                        {# <button class="btn btn-primary" type="submit">Apply filters</button> #}
 
-        <div class="d-flex flex-wrap gap-2">
-            <input
-                type="radio"
-                class="btn-check"
-                name="year"
-                id="year-all"
-                value="all"
-                autocomplete="off"
-                {% if app.request.query.get('year') is empty or app.request.query.get('year') == 'all' %}checked{% endif %}
-            >
-            <label class="btn btn-outline-secondary" for="year-all">All years</label>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-primary" type="submit">Apply filters</button>
 
-            {% for year in range(2026, 2010, -1) %}
-                <input
-                    type="radio"
-                    class="btn-check"
-                    name="year"
-                    id="year-{{ year }}"
-                    value="{{ year }}"
-                    autocomplete="off"
-                    {% if app.request.query.get('year') == year %}checked{% endif %}
-                >
-                <label class="btn btn-outline-secondary" for="year-{{ year }}">
-                    {{ year }}
-                </label>
-            {% endfor %}
-        </div>
-    </fieldset>
+                            <a class="btn btn-outline-secondary" href="{{ path('app_home') }}">
+                                Clear filters
+                            </a>
+                        </div>
+                    </form>
 
-    <button class="btn btn-primary" type="submit">Apply filters</button>
 
-    <a class="btn btn-outline-secondary" href="{{ path('app_home', {
-        title: app.request.query.get('title')
-    }) }}">
-        Clear filters
-    </a>
-</form>
+                </section>
             </div>
         {% endif %}
 
