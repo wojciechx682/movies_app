@@ -47,23 +47,33 @@ final class HomeController extends AbstractController
             $genreEntity = $genreRepository->findOneByName($genre);           
 
             if ($genreEntity !== null) {
-                // dump($genreEntity);
-                // exit();
-                    //$movies = $movieRepository->findByGenres($genreEntity); // ERROR "assert($assoc !== null)"
-                $movies = $genreEntity->getMovies()->toArray();
+                
+                $movies = $genreEntity->getMovies()->toArray();              
 
-                // dump($movies);
-                // exit();
+                if ($year !== null) {
+
+                    $moviesForYear = [];
+
+                    for ($i = 0; $i < count($movies); $i++) {                     
+                        if ($movies[$i]->getReleaseYear() === (int) $year) {
+                            $moviesForYear[] = $movies[$i];
+                        }
+                    }                    
+
+                    $movies = $moviesForYear;
+
+                    // dump($movies); exit();
+                }
+
             } else {
                 $movies = [];
             }
 
-            // $movies = $movieRepository->findByGenres([
-            //     'genres' => $genre,
-            // ]);
-
-            // dump($movies);
-            // exit();
+            
+        } elseif ($year !== null) {
+            $movies = $movieRepository->findBy([
+                'releaseYear' => (int) $year,
+            ]);
         } else {
             $movies = $movieRepository->findAllWithGenres($title);
         }
