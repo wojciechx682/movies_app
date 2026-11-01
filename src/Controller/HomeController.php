@@ -23,11 +23,11 @@ final class HomeController extends AbstractController
     #[Route('/home', name: 'app_home')]
     public function index(
         MovieRepository $movieRepository,
-        GenreRepository $genreRepository,
-        // #[MapQueryParameter] ?string $order = null,
+        GenreRepository $genreRepository,        
         #[MapQueryParameter] string $title = '',
         #[MapQueryParameter] ?string $genre = null,    
-        #[MapQueryParameter] ?string $year = null,       
+        #[MapQueryParameter] ?string $year = null,     
+        #[MapQueryParameter] ?string $order = null,  
     ): Response
     {
         // $movies = $movieRepository->findAll();
@@ -42,7 +42,7 @@ final class HomeController extends AbstractController
         //$movies = $movieRepository->findAll();
 
 
-        if ($genre !== null) {
+        /* if ($genre !== null) {
 
             $genreEntity = $genreRepository->findOneByName($genre);           
 
@@ -61,8 +61,7 @@ final class HomeController extends AbstractController
                     }                    
 
                     $movies = $moviesForYear;
-
-                    // dump($movies); exit();
+                                        
                 }
 
             } else {
@@ -76,11 +75,13 @@ final class HomeController extends AbstractController
             ]);
         } else {
             $movies = $movieRepository->findAllWithGenres($title);
-        }
+        } */
+
+        $movies = $movieRepository->findFilteredMovies($genre, $year, $order);
 
         
 
-        $genres = $genreRepository->findAll(); // potrzebne do stworzenia dynamicznej listy gatunków w base.html.tiwg
+        $genres = $genreRepository->findAll(); // potrzebne do stworzenia dynamicznej listy gatunków w base.html.tiwg 
         // dump($genres);
         // exit();
 

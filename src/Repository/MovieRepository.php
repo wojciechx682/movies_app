@@ -43,6 +43,45 @@ class MovieRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
+    public function findFilteredMovies(
+        ?string $genre,
+        ?string $year,
+        ?string $order
+    ): array {
+        
+        $qb = $this->createQueryBuilder('m')
+            ->leftJoin('m.genres', 'g')
+            ->addSelect('g');
+
+        if ($genre !== null) {
+            $qb
+                ->andWhere('g.name = :genre')
+                ->setParameter('genre', $genre);
+        }
+
+        if ($year !== null) {
+            $qb
+                ->andWhere('m.releaseYear = :year')
+                ->setParameter('year', (int) $year);
+        }
+
+        if ($order === 'title_asc') {
+            $qb->orderBy('m.title', 'ASC')->addOrderBy('m.id', 'ASC');
+        } elseif ($order === 'title_desc') {
+            $qb->orderBy('m.title', 'DESC')->addOrderBy('m.id', 'ASC');
+        } elseif ($order === 'year_desc') {
+            $qb->orderBy('m.releaseYear', 'DESC')->addOrderBy('m.id', 'ASC');
+        } elseif ($order === 'year_asc') {
+            $qb->orderBy('m.releaseYear', 'ASC')->addOrderBy('m.id', 'ASC');
+        } elseif ($order === 'created_at_desc') {
+            $qb->orderBy('m.createdAt', 'DESC')->addOrderBy('m.id', 'ASC');
+        } else {
+            $qb->orderBy('m.id', 'ASC');
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+
 //    /**
 //     * @return Movie[] Returns an array of Movie objects
 //     */

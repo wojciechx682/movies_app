@@ -80,6 +80,36 @@
                                     >
                                     Filters <i class="bi bi-chevron-down"></i>
                                 </button>
+
+                                
+                                                            
+                            </li>
+
+                            <li class="nav-item">
+                                
+                                
+                                <div class="dropdown">
+                                    <button
+                                        class="nav-link"
+                                        type="button"
+                                        data-bs-toggle="dropdown"
+                                        aria-expanded="false"
+                                    >
+                                        Sort by<i class="bi bi-chevron-down ms-1" aria-hidden="true"></i>
+                                    </button>
+
+                                    <ul class="dropdown-menu">
+                                        <li>
+                                            <a class="dropdown-item" href="{{ path('app_home', app.request.query.all()|merge({order: 'title_asc'})) }}">Title A–Z</a>
+                                            <a class="dropdown-item" href="{{ path('app_home', app.request.query.all()|merge({order: 'title_desc'})) }}">Title Z-A</a>
+                                            <a class="dropdown-item" href="{{ path('app_home', app.request.query.all()|merge({order: 'year_desc'})) }}">Newest</a>
+                                            <a class="dropdown-item" href="{{ path('app_home', app.request.query.all()|merge({order: 'year_asc'})) }}">Oldest</a>
+                                            <a class="dropdown-item" href="{{ path('app_home', app.request.query.all()|merge({order: 'created_at_desc'})) }}">Recently added</a>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                
                                                             
                             </li>
                         {% endif %}
@@ -133,6 +163,11 @@
                 <section class="container-fluid border-top bg-body-tertiary py-3 px-3">
                     
                     <form method="get" action="{{ path('app_home') }}">
+
+                        {% if app.request.query.get('order') is not empty %}
+                            <input type="hidden" name="order" value="{{ app.request.query.get('order') }}">
+                        {% endif %}
+
                         <fieldset class="mb-3">
                             <legend class="h6">Genres</legend>
 
