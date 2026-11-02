@@ -40,6 +40,12 @@ body {
     /*background-color: #E2E2E2;*/
 
     /*border-radius: 10px;*/
+
+    transition: transform 200ms ease;
+}
+
+.movie-tile a:hover .movie-poster {
+    transform: scale(1.01);
 }
 
 /*.movie-poster--placeholder {*/
