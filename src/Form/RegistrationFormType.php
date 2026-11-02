@@ -23,10 +23,10 @@ class RegistrationFormType extends AbstractType
             ->add('email', EmailType::class, [
                 'constraints' => [
                     new NotBlank(
-                        message: 'Enter your email address.',
+                        message: 'Enter your email address',
                     ),
                     new Email(
-                        message: 'Enter a valid email address.',
+                        message: 'Enter a valid email address',
                     )
                 ]
             ])
@@ -34,7 +34,7 @@ class RegistrationFormType extends AbstractType
                 'mapped' => false,
                 'constraints' => [
                     new IsTrue(
-                        message: 'You should agree to our terms.',
+                        message: 'You should agree to our terms',
                     ),
                 ],
             ])

@@ -39,7 +39,7 @@ class RegistrationController extends AbstractController
 
             $this->addFlash(
                 'success',
-                'You have successfully registered.'
+                'You have successfully registered'
             );
 
             return $this->redirectToRoute('app_login');

@@ -19,7 +19,7 @@ final class PosterUploader
         $extension = $file->guessExtension();
 
         if (!in_array($extension, ['jpg', 'jpeg', 'png', 'webp'], true)) {
-            throw new FileException('Nieobsługiwany format plakatu.');
+            throw new FileException('Nieobsługiwany format plakatu');
         }
 
         $filename = bin2hex(random_bytes(16)).'.'.$extension;

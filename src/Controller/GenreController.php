@@ -16,6 +16,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[Route('/genre')]
 final class GenreController extends AbstractController
 {
+    #[IsGranted('ROLE_ADMIN')]
     #[Route(name: 'app_genre_index', methods: ['GET'])]
     public function index(GenreRepository $genreRepository): Response
     {
@@ -36,6 +37,8 @@ final class GenreController extends AbstractController
             $entityManager->persist($genre);
             $entityManager->flush();
 
+            $this->addFlash('success', 'Genre was added successfully');
+
             return $this->redirectToRoute('app_genre_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -45,6 +48,7 @@ final class GenreController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/{id}', name: 'app_genre_show', methods: ['GET'])]
     public function show(Genre $genre): Response
     {
@@ -63,6 +67,8 @@ final class GenreController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
+            $this->addFlash('success', 'Genre was updated successfully');
+
             return $this->redirectToRoute('app_genre_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -79,6 +85,10 @@ final class GenreController extends AbstractController
         if ($this->isCsrfTokenValid('delete'.$genre->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($genre);
             $entityManager->flush();
+
+            $this->addFlash('success', 'Genre was deleted successfully');
+        } else {
+            $this->addFlash('danger', 'The genre could not be deleted');
         }
 
         return $this->redirectToRoute('app_genre_index', [], Response::HTTP_SEE_OTHER);

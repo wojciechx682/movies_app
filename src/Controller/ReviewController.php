@@ -44,6 +44,8 @@ final class ReviewController extends AbstractController
             $entityManager->persist($review);
             $entityManager->flush();
 
+            $this->addFlash('success', 'Your review was added successfully');
+
             return $this->redirectToRoute('app_review_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -67,7 +69,7 @@ final class ReviewController extends AbstractController
     {
         if ($review->getUser() !== $this->getUser()) {
             throw $this->createAccessDeniedException(
-                'You can edit only your own reviews.'
+                'You can edit only your own reviews'
             );
         }
 
@@ -78,6 +80,8 @@ final class ReviewController extends AbstractController
 
             $review->setUpdatedAt(new \DateTimeImmutable()); // Review edit date
             $entityManager->flush();
+
+            $this->addFlash('success', 'Your review was updated successfully');
 
             //return $this->redirectToRoute('app_review_index', [], Response::HTTP_SEE_OTHER);
 
@@ -98,13 +102,17 @@ final class ReviewController extends AbstractController
     {
         if ($review->getUser() !== $this->getUser()) {
             throw $this->createAccessDeniedException(
-                'You can delete only your own reviews.'
+                'You can delete only your own reviews'
             );
         }
 
         if ($this->isCsrfTokenValid('delete'.$review->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($review);
             $entityManager->flush();
+
+            $this->addFlash('success', 'Your review was deleted successfully');
+        } else {
+            $this->addFlash('danger', 'Your review could not be deleted');
         }
 
         $movie = $review->getMovie();

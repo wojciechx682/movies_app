@@ -33,7 +33,7 @@ class ReviewType extends AbstractType
                     '10' => 10,
                 ],
                 'required' => true,
-                'invalid_message' => 'Select an overall rating from 1 to 10.',
+                'invalid_message' => 'Select an overall rating from 1 to 10',
             ])
             ->add('content')
 //            ->add('createdAt', null, [

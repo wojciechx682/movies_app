@@ -30,11 +30,11 @@ class Review
 
 
     #[ORM\Column(type: Types::SMALLINT)]
-    #[Assert\NotBlank(message: 'Select a rating.')]
+    #[Assert\NotBlank(message: 'Select a rating')]
     #[Assert\Range(
         min: 1,
         max: 10,
-        notInRangeMessage: 'The rating must be between {{ min }} and {{ max }}.',
+        notInRangeMessage: 'The rating must be between {{ min }} and {{ max }}',
     )]
     private ?int $rating = null;
 

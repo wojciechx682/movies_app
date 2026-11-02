@@ -37,7 +37,7 @@
                         {% for genre in movie.genres %}
                             {{ genre.name }}{% if not loop.last %}, {% endif %}
                         {% else %}
-                            No assigned genres.
+                            No assigned genres
                         {% endfor %}
                     </div>                    
                 {% else %} 
@@ -46,7 +46,7 @@
                         {% for genre in movie.genres %}
                             {{ genre.name }}{% if not loop.last %}, {% endif %}
                         {% else %}
-                            No assigned genres.
+                            No assigned genres
                         {% endfor %}
                     </div>                    
                 {% endif %}

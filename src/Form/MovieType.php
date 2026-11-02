@@ -36,9 +36,6 @@ class MovieType extends AbstractType
 //            ->add('createdAt', null, [
 //                'widget' => 'single_text'
 //            ])
-            ->add('updatedAt', null, [
-                'widget' => 'single_text'
-            ])
             ->add('genres', EntityType::class, [
                 'class' => Genre::class,
                 'choice_label' => 'name',

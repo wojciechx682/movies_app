@@ -65,6 +65,8 @@ final class MovieController extends AbstractController
                 $entityManager->persist($movie);
                 $entityManager->flush();
 
+                $this->addFlash('success', 'Movie was added successfully');
+
                 return $this->redirectToRoute(
                     'app_movie_index',
                     [],
@@ -72,7 +74,7 @@ final class MovieController extends AbstractController
                 );
             } catch (FileException $exception) {
                 $form->get('posterFile')->addError(
-                    new FormError('Nie udało się zapisać plakatu. Spróbuj ponownie.')
+                    new FormError('Nie udało się zapisać plakatu, spróbuj ponownie')
                 );
             }
 
@@ -149,6 +151,8 @@ final class MovieController extends AbstractController
                     $entityManager->persist($review);
                     $entityManager->flush();
 
+                    $this->addFlash('success', 'Your review was added successfully');
+
                     return $this->redirectToRoute('app_movie_show', [
                         'id' => $movie->getId(),
                     ]);
@@ -205,8 +209,12 @@ final class MovieController extends AbstractController
                     );
                 }
 
+                $movie->setUpdatedAt(new \DateTimeImmutable());
+
                 //$entityManager->persist($movie);
                 $entityManager->flush();
+
+                $this->addFlash('success', 'Movie was updated successfully');
 
                 return $this->redirectToRoute(
                     'app_movie_index',
@@ -215,7 +223,7 @@ final class MovieController extends AbstractController
                 );
             } catch (FileException $exception) {
                 $form->get('posterFile')->addError(
-                    new FormError('Nie udało się zapisać plakatu. Spróbuj ponownie.')
+                    new FormError('Nie udało się zapisać plakatu, spróbuj ponownie')
                 );
             }
 
