@@ -24,10 +24,11 @@ final class HomeController extends AbstractController
     public function index(
         MovieRepository $movieRepository,
         GenreRepository $genreRepository,        
-        #[MapQueryParameter] string $title = '',
+        #[MapQueryParameter] ?string $title = null,
         #[MapQueryParameter] ?string $genre = null,    
         #[MapQueryParameter] ?string $year = null,     
         #[MapQueryParameter] ?string $order = null,  
+        #[MapQueryParameter] int $page = 1,
     ): Response
     {
         // $movies = $movieRepository->findAll();
@@ -77,7 +78,7 @@ final class HomeController extends AbstractController
             $movies = $movieRepository->findAllWithGenres($title);
         } */
 
-        $movies = $movieRepository->findFilteredMovies($genre, $year, $order);
+        $movies = $movieRepository->findFilteredMovies($title, $genre, $year, $order);
 
         
 

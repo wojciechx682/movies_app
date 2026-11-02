@@ -44,6 +44,7 @@ class MovieRepository extends ServiceEntityRepository
     }
 
     public function findFilteredMovies(
+        ?string $title,
         ?string $genre,
         ?string $year,
         ?string $order
@@ -52,6 +53,12 @@ class MovieRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('m')
             ->leftJoin('m.genres', 'g')
             ->addSelect('g');
+
+        if ($title !== null && trim($title) !== '') {
+            $qb
+                ->andWhere('m.title LIKE :title')
+                ->setParameter('title', '%' . trim($title) . '%');
+        }
 
         if ($genre !== null) {
             $qb
