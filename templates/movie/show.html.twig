@@ -231,6 +231,14 @@
             <div>No ratings</div>
         {% endfor %}
 
+        {%  if not app.user %}            
+
+            <div>
+                <a href="{{ path('app_login') }}">Sign in</a> to rate this movie or leave a review
+            </div>            
+
+        {%  endif %}
+
     </div>
 
 {% endblock %}

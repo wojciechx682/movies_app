@@ -4,14 +4,36 @@ namespace App\Service;
 
 use App\Entity\Movie;
 
+use App\Repository\ReviewRepository;
+
 class MovieRatingService
 {
+    // Dependency Injection
+    public function __construct(
+        private ReviewRepository $reviewRepository
+    ) {
+    }
+
     /**
      * @return list<float>
      */
     public function calculateAverage(Movie $movie): array
     {
-        $reviews = $movie->getReviews(); // Lazy Loading          
+        
+        
+
+        // $reviews = $movie->getReviews(); // Lazy Loading          
+
+
+        $reviews = $this->reviewRepository->findBy(
+            [
+                'movie' => $movie
+            ], 
+            [
+                'createdAt' => 'DESC', 'id' => 'DESC'
+            ]
+        );
+
 
         $sum = 0; // suma recenzji (do obliczenia średniej wartości)
         $count = 0; // liczba recenzji
