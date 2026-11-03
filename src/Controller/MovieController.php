@@ -239,12 +239,16 @@ final class MovieController extends AbstractController
     }
 
     #[IsGranted('ROLE_ADMIN')]
-    #[Route('/{id}', name: 'app_movie_delete', methods: ['POST'])]
+    #[Route('/{id}/delete', name: 'app_movie_delete', methods: ['POST'])]
     public function delete(Request $request, Movie $movie, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$movie->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($movie);
             $entityManager->flush();
+
+            $this->addFlash('success', 'Movie was deleted successfully');
+        } else {
+            $this->addFlash('danger', 'Movie could not be deleted');
         }
 
         return $this->redirectToRoute('app_movie_index', [], Response::HTTP_SEE_OTHER);
