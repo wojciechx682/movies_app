@@ -106,3 +106,17 @@ things up in the project instead of relying on memory:
 - Read the installed source and docblocks under `vendor/`.
 - Docs: https://symfony.com/doc/current/ (switch to the version matching
   `composer.json` if it differs).
+
+## My own personal remarks (author of the project)
+
+Maintain consistency with the existing code; for example, if a `for` loop is used instead of a `foreach` loop, follow that pattern.
+
+Code readability, simplicity, and maintainability are more valuable than a "perfect" form—please adapt your coding style to match mine.
+
+Use clear names for variables and functions—names that indicate what a variable stores or what its purpose is.
+
+If you are making changes to the code, comment out the old code rather than deleting it.
+
+You can add comments to existing code if necessary—for example, to explain why one decision was made instead of another.
+
+The code remains simple - there’s no need to add a service or an abstraction for every single piece. If simple code is clear, then it’s a good choice.
