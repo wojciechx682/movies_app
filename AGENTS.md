@@ -120,3 +120,5 @@ If you are making changes to the code, comment out the old code rather than dele
 You can add comments to existing code if necessary—for example, to explain why one decision was made instead of another.
 
 The code remains simple - there’s no need to add a service or an abstraction for every single piece. If simple code is clear, then it’s a good choice.
+
+If I ask you for a solution, feel free to suggest alternative approaches in the code to address a given functional requirement. This is part of you mentoring me as a developer.
