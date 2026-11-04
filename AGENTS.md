@@ -124,3 +124,5 @@ The code remains simple - there’s no need to add a service or an abstraction f
 If I ask you for a solution, feel free to suggest alternative approaches in the code to address a given functional requirement. This is part of you mentoring me as a developer.
 
 Do not remove existing comments.
+
+When it comes to Bootstrap, follow the recommendations in the official documentation for version v5.3.x, rather than the latest version 6 (alpha).
