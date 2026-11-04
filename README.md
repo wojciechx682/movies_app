@@ -1,19 +1,24 @@
-# Movie App
+# Movies App
 
-Aplikacja webowa MVP do przeglądania filmów i dodawania do nich ocen oraz recenzji.
+Movies App to rozwijana aplikacja MVP do przeglądania katalogu filmów, oceniania ich i dodawania recenzji. Użytkownicy mogą tworzyć konta, a administratorzy zarządzać filmami i gatunkami.
 
 ## Funkcje
 
-- Katalog filmów z wyszukiwaniem po tytule.
-- Widok szczegółów filmu z opisem, gatunkami, plakatem i recenzjami.
-- Rejestracja i logowanie użytkowników.
-- Role `ROLE_USER` i `ROLE_ADMIN`.
-- Dodawanie, edycja i usuwanie filmów oraz gatunków przez administratora.
-- Dodawanie jednej recenzji do filmu przez użytkownika.
-- Ocena w skali 1–10 i opcjonalny komentarz.
-- Edycja i usuwanie własnej recenzji.
-- Wyświetlanie średniej oceny w formie gwiazdek oraz liczby ocen i komentarzy.
-- Przesyłanie plakatów filmów z walidacją formatu i rozmiaru pliku.
+- Katalog filmów z wyszukiwaniem po tytule
+- Filtrowanie filmów według gatunku i roku wydania; gatunek i rok można łączyć
+- Sortowanie według tytułu A–Z, tytułu Z–A, najnowszego lub najstarszego roku wydania oraz daty dodania filmu
+- Szczegóły filmu: opis, reżyser, gatunki, plakat i recenzje
+- Średnia ocena prezentowana liczbowo i w postaci gwiazdek, liczba ocen oraz liczba komentarzy
+- Rejestracja, logowanie i wylogowanie; hasła są przechowywane jako hash
+- Role `ROLE_USER` i `ROLE_ADMIN`; rejestracja nadaje zwykłe uprawnienia użytkownika
+- Administrator może dodawać i edytować filmy oraz zarządzać gatunkami
+- Zalogowany użytkownik może dodać jedną ocenę do filmu, a potem edytować lub usunąć własną recenzję
+- Ocena jest w skali 1–10; komentarz do oceny jest opcjonalny
+- Dodawanie plakatów JPG, JPEG, PNG lub WebP do 5 MB
+- Komunikaty flash po wybranych operacjach
+- Walidacja filmu: wymagany tytuł, opis i reżyser; tytuł i reżyser do 255 znaków; rok wydania 1888–2100; opcjonalny czas trwania 1–32767 minut
+- Walidacja recenzji: ocena 1–10; nazwa gatunku jest wymagana, ma limit 100 znaków i musi być unikalna
+- Walidacja rejestracji: poprawny i unikalny email do 180 znaków, hasło 6–4096 znaków, zgodność powtórzenia hasła i akceptacja regulaminu
 
 ## Technologie
 
@@ -22,49 +27,58 @@ Aplikacja webowa MVP do przeglądania filmów i dodawania do nich ocen oraz rece
 - Doctrine ORM i Doctrine Migrations
 - MySQL
 - Twig
-- Bootstrap 5
+- Bootstrap 5.3
 
 ## Wymagania
 
-- PHP zgodne z wersją wymaganą w `composer.json` (`>=8.4`)
+- PHP 8.5+ z rozszerzeniem PDO MySQL
 - Composer
-- MySQL
-- Symfony CLI — opcjonalnie, do uruchomienia lokalnego serwera
+- Serwer MySQL
+- Symfony CLI — opcjonalnie, do uruchamiania lokalnego serwera (symfony serve)
 
 ## Instalacja lokalna
 
-1. Sklonuj repozytorium i przejdź do katalogu projektu.
-2. Zainstaluj zależności:
+1. Sklonuj repozytorium i przejdź do katalogu projektu
+
+   ```bash
+   git clone <adres-repozytorium>
+   cd movies_app
+   ```
+
+2. Zainstaluj zależności
 
    ```bash
    composer install
    ```
 
-3. Utwórz plik `.env.local` w katalogu głównym i ustaw w nim `DATABASE_URL` dla swojej lokalnej bazy MySQL. Przykład:
+3. Utwórz plik `.env.local` w katalogu głównym i ustaw adres lokalnej bazy MySQL
 
    ```dotenv
    DATABASE_URL="mysql://db_user:db_password@127.0.0.1:3306/movies_app?serverVersion=8.0.32&charset=utf8mb4"
    ```
 
-   Zastąp dane użytkownika, hasło i `serverVersion` wartościami dla swojej instalacji. Nie umieszczaj prawdziwych danych dostępowych w repozytorium.
+   Zastąp nazwę użytkownika, hasło i `serverVersion` wartościami dla swojej instalacji MySQL. Nie zapisuj prawdziwych danych dostępowych w repozytorium.
 
-4. Utwórz bazę i zastosuj migracje:
+4. Utwórz bazę danych i zastosuj migracje
 
    ```bash
    php bin/console doctrine:database:create
    php bin/console doctrine:migrations:migrate
    ```
 
-5. Upewnij się, że katalog `public/uploads/posters` istnieje i aplikacja może zapisywać w nim pliki.
-6. Uruchom aplikację:
+5. Upewnij się, że katalog `public/uploads/posters` istnieje i aplikacja ma do niego prawo zapisu
+
+6. Uruchom lokalny serwer
 
    ```bash
    symfony serve
    ```
 
-## Role i konto administratora
+   Następnie otwórz adres podany przez Symfony CLI, zwykle `https://127.0.0.1:8000` lub `http://127.0.0.1:8000`
 
-Nowe konto otrzymuje rolę `ROLE_USER`. Aby nadać istniejącemu kontu rolę administratora, można zaktualizować jego wpis w lokalnej bazie danych:
+## Konto administratora
+
+Publiczna rejestracja tworzy zwykłe konto `ROLE_USER`. Aby nadać istniejącemu kontu rolę administratora w lokalnej bazie MySQL, wykonaj zapytanie, podstawiając email zarejestrowanego konta:
 
 ```sql
 UPDATE `user`
@@ -72,76 +86,94 @@ SET roles = JSON_ARRAY('ROLE_ADMIN')
 WHERE email = 'admin@example.com';
 ```
 
-Zmień adres e-mail na adres zarejestrowanego konta. Nie zapisuj haseł ani danych dostępowych do bazy w repozytorium.
+Nie udostępniaj takiej operacji użytkownikom aplikacji. Uprawnienia administracyjne nie są nadawane przez formularz rejestracji.
 
 ## Główne adresy
 
-- `/home` — katalog filmów i wyszukiwarka
-- `/movie/{id}` — szczegóły filmu, recenzje i formularz dodania recenzji
-- `/genre` — lista gatunków
-- `/login` — logowanie
-- `/register` — rejestracja
+| Adres | Opis | Dostęp |
+|---|---|---|
+| `/home` | Katalog filmów, wyszukiwanie, filtry i sortowanie | Publiczny |
+| `/movie/{id}` | Szczegóły filmu i jego recenzje | Publiczny |
+| `/movie/new` | Dodawanie filmu | Administrator |
+| `/movie/{id}/edit` | Edycja filmu | Administrator |
+| `/genre` | Lista i zarządzanie gatunkami | Administrator |
+| `/login` | Logowanie | Gość |
+| `/register` | Rejestracja | Gość |
 
-## Dane przykładowe
+## Plakaty filmów
 
-Projekt nie zawiera fixtures z przykładowymi filmami. Administrator dodaje filmy przez formularz w aplikacji.
+Plakaty są przechowywane jako pliki w `public/uploads/posters`, a w bazie zapisywana jest ich ścieżka. Formularz opcjonalnie przyjmuje pliki JPG, JPEG, PNG i WebP o maksymalnym rozmiarze 5 MB.
 
-## Status projektu
+## Dane i ograniczenia MVP
 
-Projekt jest rozwijanym MVP. Wyszukiwanie działa po tytule; sortowanie wyników i paginacja nie są obecnie zaimplementowane.
+- Projekt nie zawiera fixtures z przykładowymi filmami. Administrator dodaje filmy przez formularz
+- Wyszukiwanie obejmuje tytuł filmu
+- Paginacja katalogu nie jest jeszcze zaimplementowana
+- Film z istniejącymi recenzjami nie może być obecnie usunięty z powodu ograniczenia klucza obcego
+- Testy funkcjonalne aplikacji nie są jeszcze przygotowane
 
 ## Zrzuty ekranu
 
-![Strona główna](docs/screenshots/1.png)
+### Katalog filmów
 
-![Ekran logowania](docs/screenshots/2.png)
+<p>
+  <img src="docs/screenshots/home_page.png" alt="Strona główna" width="700">
+</p>
 
-![Ekran rejestracji](docs/screenshots/3.png)
+<!-- ![Strona główna](docs/screenshots/home_page.png) -->
 
-![Widok szczegółów filmu](docs/screenshots/4.png)
+### Filtry
 
-![Widok edycji recenzji filmu](docs/screenshots/5.png)
+<!-- ![Filtry](docs/screenshots/filters.png) -->
 
-![Widok dodawania recenzji do filmu](docs/screenshots/6.png)
+<p>
+  <img src="docs/screenshots/filters.png" alt="Filtry" width="700">
+</p>
 
-![Widok dodawania filmu przez administratora](docs/screenshots/7.png)
+### Sortowanie
+
+<!-- ![Sortowanie](docs/screenshots/sorting.png) -->
+
+<p>
+  <img src="docs/screenshots/sorting.png" alt="Sortowanie" width="700">
+</p>
+
+### Logowanie i rejestracja
+
+<!-- ![Ekran logowania](docs/screenshots/login.png)
+
+![Ekran rejestracji](docs/screenshots/register.png) -->
+
+<p>
+  <img src="docs/screenshots/login.png" alt="Logowanie" width="700">
+</p>
+
+<p>
+  <img src="docs/screenshots/register.png" alt="Rejestracja" width="700">
+</p>
+
+### Szczegóły filmu i recenzje
+
+<!-- ![Widok szczegółów filmu](docs/screenshots/movie_details.png) -->
+
+<p>
+  <img src="docs/screenshots/movie_details.png" alt="Widok szczegółów filmu" width="700">
+</p>
+
+### Zarządzanie filmami
+
+<!-- ![Dodawanie filmu przez administratora](docs/screenshots/add_movie.png) -->
+
+<p>
+  <img src="docs/screenshots/add_movie.png" alt="Dodawanie filmu przez administratora" width="700">
+</p>
 
 
+### Zarządzanie gatunkami
 
+<!-- ![CRUD gatunków](docs/screenshots/genres.png) -->
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<p>
+  <img src="docs/screenshots/genres.png" alt="CRUD gatunków" width="700">
+</p>
 
