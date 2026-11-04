@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: MovieRepository::class)]
 class Movie
@@ -17,21 +18,43 @@ class Movie
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'Enter a movie title')]
+    #[Assert\Length(
+        max: 255,
+        maxMessage: 'The movie title cannot be longer than {{ limit }} characters',
+    )]
     private ?string $title = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $originalTitle = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Assert\NotBlank(message: 'Enter a movie description')]
     private ?string $description = null;
 
     #[ORM\Column(type: Types::SMALLINT)]
+    #[Assert\NotBlank(message: 'Enter the release year')]
+    #[Assert\Range(
+        min: 1888,
+        max: 2100,
+        notInRangeMessage: 'The release year must be between {{ min }} and {{ max }}',
+    )]
     private ?int $releaseYear = null;
 
     #[ORM\Column(type: Types::SMALLINT, nullable: true)]
+    #[Assert\Range(
+        min: 1,
+        max: 32767,
+        notInRangeMessage: 'The runtime must be between {{ min }} and {{ max }} minutes',
+    )]
     private ?int $runtimeMinutes = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'Enter a movie director')]
+    #[Assert\Length(
+        max: 255,
+        maxMessage: 'The director name cannot be longer than {{ limit }} characters',
+    )]
     private ?string $director = null;
 
     #[ORM\Column(length: 255, nullable: true)]

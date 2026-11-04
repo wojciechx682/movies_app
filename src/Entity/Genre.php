@@ -6,8 +6,11 @@ use App\Repository\GenreRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: GenreRepository::class)]
+#[UniqueEntity(fields: ['name'], message: 'A genre with this name already exists')]
 class Genre
 {
     #[ORM\Id]
@@ -16,6 +19,11 @@ class Genre
     private ?int $id = null;
 
     #[ORM\Column(length: 100, unique: true)]
+    #[Assert\NotBlank(message: 'Enter a genre name')]
+    #[Assert\Length(
+        max: 100,
+        maxMessage: 'The genre name cannot be longer than {{ limit }} characters',
+    )]
     private ?string $name = null;
 
     /**

@@ -28,7 +28,11 @@ class RegistrationFormType extends AbstractType
                     ),
                     new Email(
                         message: 'Enter a valid email address',
-                    )
+                    ),
+                    new Length(
+                        max: 180,
+                        maxMessage: 'The email address cannot be longer than {{ limit }} characters',
+                    ),
                 ]
             ])
             ->add('agreeTerms', CheckboxType::class, [
