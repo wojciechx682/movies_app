@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Repository\GenreRepository;
 use App\Repository\MovieRepository;
+use App\Repository\ReviewRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
@@ -23,7 +24,8 @@ final class HomeController extends AbstractController
     #[Route('/home', name: 'app_home')]
     public function index(
         MovieRepository $movieRepository,
-        GenreRepository $genreRepository,        
+        GenreRepository $genreRepository,
+        ReviewRepository $reviewRepository,
         #[MapQueryParameter] ?string $title = null,
         #[MapQueryParameter] ?string $genre = null,    
         #[MapQueryParameter] ?string $year = null,     
@@ -79,8 +81,7 @@ final class HomeController extends AbstractController
         } */
 
         $movies = $movieRepository->findFilteredMovies($title, $genre, $year, $order);
-
-        
+        $movieRatings = $reviewRepository->getRatingSummariesForMovies($movies);
 
         $genres = $genreRepository->findAll(); // potrzebne do stworzenia dynamicznej listy gatunków w base.html.tiwg 
         // dump($genres);
@@ -93,6 +94,7 @@ final class HomeController extends AbstractController
 
         return $this->render('home/index.html.twig', [
             'movies' => $movies,
+            'movieRatings' => $movieRatings,
             'genres' => $genres,
             // 'order' => $order,
         ]);
