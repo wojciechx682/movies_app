@@ -53,40 +53,12 @@
                                 </div>
                             {% endif %}
 
-                            {#
-                            {% set movieRating = movieRatings[movie.id] ?? null %}
-                            {% if movieRating is not null and movieRating.count > 0 %}
-                                <div class="movie-rating-summary" aria-label="Average rating {{ movieRating.average|number_format(1, ',', ' ') }} from {{ movieRating.count }} ratings">
-                                    <i class="bi bi-star-fill movie-rating-summary__star" aria-hidden="true"></i>
-                                    <span class="movie-rating-summary__average">{{ movieRating.average|number_format(1, ',', ' ') }}</span>
-                                    <span class="movie-rating-summary__count">
-                                        <span>{{ movieRating.count|number_format(0, ',', ' ') }}</span>
-                                        <span class="movie-rating-summary__count-label">ratings</span>
-                                    </span>
-                                </div>
-                            {% else %}
-                                <div class="movie-rating-summary movie-rating-summary--empty">No ratings</div>
-                            {% endif %}
-                            #}
-
 {#                            <div>{{ movie.description }}</div>#}
 
 {#                            <div>{{ movie.runtimeMinutes }}</div>#}
                             <div class="small text-body-secondary">
                                 Directed by {{ movie.director }}
                             </div>
-
-                            {% set movieRating = movieRatings[movie.id] ?? null %}
-                            {% if movieRating is not null and movieRating.count > 0 %}
-                                <div class="d-flex align-items-center gap-2">
-                                    <i class="bi bi-star-fill"></i>
-                                    <span>{{ movieRating.average|number_format(1, ',', ' ') }}</span>
-                                    <span>{{ movieRating.count|number_format(0, ',', ' ') }} ratings</span>
-                                </div>
-                            {% else %}
-                                <div>No ratings</div>
-                            {% endif %}
-
                             {#                            <div>{{ movie.createdAt | date('Y-m-d') }}</div>#}
                         </div>
                     </div>

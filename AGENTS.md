@@ -109,8 +109,6 @@ things up in the project instead of relying on memory:
 
 ## My own personal remarks (author of the project)
 
-The code is to be written as if it was written by a Junior, not an expert
-
 Maintain consistency with the existing code; for example, if a `for` loop is used instead of a `foreach` loop, follow that pattern.
 
 Code readability, simplicity, and maintainability are more valuable than a "perfect" form—please adapt your coding style to match mine.
