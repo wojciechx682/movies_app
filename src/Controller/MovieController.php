@@ -67,9 +67,11 @@ final class MovieController extends AbstractController
 
                 $this->addFlash('success', 'Movie was added successfully');
 
+                $movieId = $movie->getId();
+
                 return $this->redirectToRoute(
-                    'app_movie_index',
-                    [],
+                    'app_movie_show',
+                    ['id' => $movieId],
                     Response::HTTP_SEE_OTHER
                 );
             } catch (FileException $exception) {
