@@ -4,7 +4,16 @@
 
 {% block body %}
 
+    {% set titleSearch = app.request.query.get('title', '')|trim %}
+
     <div class="container mt-3">
+
+        {% if titleSearch is not empty %}
+            <div class="d-flex align-items-center justify-content-between gap-3 mb-3">
+                <p class="mb-0">Showing results for <strong>“{{ titleSearch }}”</strong></p>
+                <a class="btn btn-sm btn-outline-secondary" href="{{ path('app_home') }}">Clear search</a>
+            </div>
+        {% endif %}
 
         {# {% if app.user %}
             <div class="mb-3">
@@ -66,7 +75,12 @@
                     </div>
                 </div>            
             {% else %}
-                <div>No movies found</div>
+                {# <div>No movies found</div> #}
+                {% if titleSearch is not empty %}
+                    <div>No movies found for “{{ titleSearch }}”</div>
+                {% else %}
+                    <div>No movies found</div>
+                {% endif %}
             {% endfor %}
         </div>
     </div>

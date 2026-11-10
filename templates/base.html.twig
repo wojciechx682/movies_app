@@ -26,6 +26,8 @@
     </head>
     <body>
 
+        {% set titleSearch = app.request.query.get('title', '')|trim %}
+
         <nav class="navbar navbar-expand-lg bg-body-tertiary mb-0">
             <div class="container-fluid">
                 {#                <a class="navbar-brand" href="#">Movie App</a>#}
@@ -38,7 +40,7 @@
                             <a class="nav-link active" aria-current="page" href="{{ path('app_home') }}">Home</a>
                         </li>
 
-                        {% if app.request.attributes.get('_route') == 'app_home' %}
+                        {% if app.request.attributes.get('_route') == 'app_home' and titleSearch is empty %}
                             <li class="nav-item">
                                 {# <div class="dropdown">
                                     <button class="nav-link dropdown-toggle"
@@ -152,7 +154,7 @@
                     </ul>
 
                     <form class="d-flex" role="search" action="{{ path('app_home') }}">
-                        <input class="form-control me-2" type="search" placeholder="Movie Title" aria-label="Search" name="title" value="{{ app.request.query.get('title', '') }}"/>
+                        <input class="form-control me-2" type="search" placeholder="Movie Title" aria-label="Search" name="title" value="{{ titleSearch }}"/>
                         <button class="btn btn-secondary" type="submit">Search</button>
                     </form>
                     
@@ -162,7 +164,7 @@
             
         </nav>
 
-        {% if app.request.attributes.get('_route') == 'app_home' %}
+        {% if app.request.attributes.get('_route') == 'app_home' and titleSearch is empty %}
             <div class="collapse" id="movieFilters">
                 <section class="container-fluid border-top bg-body-tertiary py-3 px-3">
                     
@@ -221,9 +223,16 @@
                         <div class="d-flex gap-2">
                             <button class="btn btn-primary" type="submit">Apply filters</button>
 
-                            <a class="btn btn-outline-secondary" href="{{ path('app_home') }}">
-                                Clear filters
-                            </a>
+                            {# <a class="btn btn-outline-secondary" href="{{ path('app_home') }}">Clear filters</a> #}
+                            {% if app.request.query.get('order') is not empty %}
+                                <a class="btn btn-outline-secondary" href="{{ path('app_home', {order: app.request.query.get('order')}) }}">
+                                    Clear filters
+                                </a>
+                            {% else %}
+                                <a class="btn btn-outline-secondary" href="{{ path('app_home') }}">
+                                    Clear filters
+                                </a>
+                            {% endif %}
                         </div>
                     </form>
 

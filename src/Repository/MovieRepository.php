@@ -50,9 +50,8 @@ class MovieRepository extends ServiceEntityRepository
         ?string $order
     ): array {
         
-        $qb = $this->createQueryBuilder('m')
-            ->leftJoin('m.genres', 'g')
-            ->addSelect('g');
+        /*
+        Previous logic added each provided parameter independently:
 
         if ($title !== null && trim($title) !== '') {
             $qb
@@ -72,18 +71,48 @@ class MovieRepository extends ServiceEntityRepository
                 ->setParameter('year', (int) $year);
         }
 
-        if ($order === 'title_asc') {
-            $qb->orderBy('m.title', 'ASC')->addOrderBy('m.id', 'ASC');
-        } elseif ($order === 'title_desc') {
-            $qb->orderBy('m.title', 'DESC')->addOrderBy('m.id', 'ASC');
-        } elseif ($order === 'year_desc') {
-            $qb->orderBy('m.releaseYear', 'DESC')->addOrderBy('m.id', 'ASC');
-        } elseif ($order === 'year_asc') {
-            $qb->orderBy('m.releaseYear', 'ASC')->addOrderBy('m.id', 'ASC');
-        } elseif ($order === 'created_at_desc') {
-            $qb->orderBy('m.createdAt', 'DESC')->addOrderBy('m.id', 'ASC');
+        The sorting rules followed these conditions, so title search could also
+        be affected by genre, year and order.
+        */
+        $qb = $this->createQueryBuilder('m')
+            ->leftJoin('m.genres', 'g')
+            ->addSelect('g');
+
+        if ($title !== null && trim($title) !== '') {
+            
+            $qb
+                ->andWhere('m.title LIKE :title')
+                ->setParameter('title', '%' . trim($title) . '%')
+                ->orderBy('m.title', 'ASC')
+                ->addOrderBy('m.id', 'ASC');
+
         } else {
-            $qb->orderBy('m.id', 'ASC');
+
+            if ($genre !== null) {
+                $qb
+                    ->andWhere('g.name = :genre')
+                    ->setParameter('genre', $genre);
+            }
+
+            if ($year !== null) {
+                $qb
+                    ->andWhere('m.releaseYear = :year')
+                    ->setParameter('year', (int) $year);
+            }
+
+            if ($order === 'title_asc') {
+                $qb->orderBy('m.title', 'ASC')->addOrderBy('m.id', 'ASC');
+            } elseif ($order === 'title_desc') {
+                $qb->orderBy('m.title', 'DESC')->addOrderBy('m.id', 'ASC');
+            } elseif ($order === 'year_desc') {
+                $qb->orderBy('m.releaseYear', 'DESC')->addOrderBy('m.id', 'ASC');
+            } elseif ($order === 'year_asc') {
+                $qb->orderBy('m.releaseYear', 'ASC')->addOrderBy('m.id', 'ASC');
+            } elseif ($order === 'created_at_desc') {
+                $qb->orderBy('m.createdAt', 'DESC')->addOrderBy('m.id', 'ASC');
+            } else {
+                $qb->orderBy('m.id', 'ASC');
+            }
         }
 
         return $qb->getQuery()->getResult();
