@@ -200,6 +200,7 @@
                         <fieldset class="mb-3">
                             <legend class="h6">Release year</legend>
 
+                            {#
                             <div class="d-flex flex-wrap gap-2">
                                 {% for year in range(2026, 1990, -1) %}
                                     <input
@@ -215,6 +216,28 @@
                                         {{ year }}
                                     </label>
                                 {% endfor %}
+                            </div>
+                            #}
+
+                            <div class="row">
+                                <div class="col-12 col-md-4">
+                                    <label class="form-label" for="releaseYear">Choose a year</label>
+                                    <select class="form-select" name="year" id="releaseYear">
+                                        <option value="" {% if app.request.query.get('year') is empty %}selected{% endif %}>
+                                            {% if releaseYears is empty %}
+                                                No release years available
+                                            {% else %}
+                                                Select a year
+                                            {% endif %}
+                                        </option>
+
+                                        {% for year in releaseYears %}
+                                            <option value="{{ year }}" {% if app.request.query.get('year') == year %}selected{% endif %}>
+                                                {{ year }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
                             </div>
                         </fieldset>
 

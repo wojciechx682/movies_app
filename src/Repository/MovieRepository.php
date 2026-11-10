@@ -43,6 +43,26 @@ class MovieRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
+    /**
+     * @return list<int>
+     */
+    public function findReleaseYears(): array
+    {
+        $results = $this->createQueryBuilder('m')
+            ->select('DISTINCT m.releaseYear')
+            ->orderBy('m.releaseYear', 'DESC')
+            ->getQuery()
+            ->getSingleColumnResult();
+
+        $releaseYears = [];
+
+        for ($i = 0; $i < count($results); $i++) {
+            $releaseYears[] = (int) $results[$i];
+        }
+
+        return $releaseYears;
+    }
+
     public function findFilteredMovies(
         ?string $title,
         ?string $genre,
@@ -94,10 +114,10 @@ class MovieRepository extends ServiceEntityRepository
                     ->setParameter('genre', $genre);
             }
 
-            if ($year !== null) {
+            if ($year !== null && trim($year) !== '') {
                 $qb
                     ->andWhere('m.releaseYear = :year')
-                    ->setParameter('year', (int) $year);
+                    ->setParameter('year', (int) trim($year));
             }
 
             if ($order === 'title_asc') {

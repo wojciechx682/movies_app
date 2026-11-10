@@ -80,7 +80,11 @@ final class HomeController extends AbstractController
 
         $movies = $movieRepository->findFilteredMovies($title, $genre, $year, $order);
 
-        
+        $releaseYears = [];
+
+        if ($title === null || trim($title) === '') {
+            $releaseYears = $movieRepository->findReleaseYears(); // pobieramy filtry (rok/lata) tylko jeśli nie podano tytułu (zgodne z założeniami)
+        }
 
         $genres = $genreRepository->findAll(); // potrzebne do stworzenia dynamicznej listy gatunków w base.html.tiwg 
         // dump($genres);
@@ -94,6 +98,7 @@ final class HomeController extends AbstractController
         return $this->render('home/index.html.twig', [
             'movies' => $movies,
             'genres' => $genres,
+            'releaseYears' => $releaseYears,
             // 'order' => $order,
         ]);
     }
