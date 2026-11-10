@@ -256,6 +256,6 @@ final class MovieController extends AbstractController
             $this->addFlash('danger', 'Movie could not be deleted');
         }
 
-        return $this->redirectToRoute('app_movie_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_home', [], Response::HTTP_SEE_OTHER);
     }
 }

@@ -189,7 +189,15 @@
 
                 <a href="{{ path('app_movie_edit', {'id': movie.id}) }}">edit</a>
 
-                {{ include('movie/_delete_form.html.twig') }}
+                {# {{ include('movie/_delete_form.html.twig') }} #}
+                <button
+                    type="button"
+                    class="btn btn-danger"
+                    data-bs-toggle="modal"
+                    data-bs-target="#deleteMovieModal"
+                >
+                    Delete
+                </button>
 
             </div>
 
@@ -236,6 +244,50 @@
             </div>            
 
         {%  endif %}
+
+        {% if is_granted('ROLE_ADMIN') %}
+            {% set reviewCount = reviews|length %}
+
+            <div
+                class="modal fade"
+                id="deleteMovieModal"
+                tabindex="-1"
+                aria-labelledby="deleteMovieModalLabel"
+                aria-hidden="true"
+            >
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="deleteMovieModalLabel">Delete movie?</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            {% if reviewCount > 0 %}
+                                <p>
+                                    Deleting "{{ movie.title }}" will also permanently delete {{ reviewCount }} review{% if reviewCount != 1 %}s{% endif %}. This action cannot be undone
+                                </p>
+                            {% else %}
+                                <p>Are you sure you want to permanently delete “{{ movie.title }}”? This action cannot be undone</p>
+                            {% endif %}
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+
+                            <form method="post" action="{{ path('app_movie_delete', {'id': movie.id}) }}">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ movie.id) }}">
+                                <button type="submit" class="btn btn-danger">
+                                    {% if reviewCount > 0 %}
+                                        Delete movie and reviews
+                                    {% else %}
+                                        Delete movie
+                                    {% endif %}
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
 
     </div>
 
