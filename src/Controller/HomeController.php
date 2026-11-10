@@ -12,6 +12,9 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class HomeController extends AbstractController
 {
+    // private const MOVIES_PER_PAGE = 8;
+    private const MOVIES_PER_PAGE = 12;
+
 //    #[Route('/home', name: 'app_home')]
 //    public function index(): Response
 //    {
@@ -31,6 +34,29 @@ final class HomeController extends AbstractController
         #[MapQueryParameter] int $page = 1,
     ): Response
     {
+        $hasTitleSearch = $title !== null && trim($title) !== '';
+        $queryParameters = [];
+
+        if ($hasTitleSearch) {
+            $queryParameters['title'] = trim($title);
+        } else {
+            if ($genre !== null && trim($genre) !== '') {
+                $queryParameters['genre'] = $genre;
+            }
+
+            if ($year !== null && trim($year) !== '') {
+                $queryParameters['year'] = trim($year);
+            }
+
+            if ($order !== null && trim($order) !== '') {
+                $queryParameters['order'] = $order;
+            }
+        }
+
+        if ($page < 1) {
+            return $this->redirectToRoute('app_home', $queryParameters);
+        }
+
         // $movies = $movieRepository->findAll();
 
         //dd($movies);
@@ -78,11 +104,22 @@ final class HomeController extends AbstractController
             $movies = $movieRepository->findAllWithGenres($title);
         } */
 
-        $movies = $movieRepository->findFilteredMovies($title, $genre, $year, $order);
+        $moviesPage = $movieRepository->findFilteredMovies(
+            $title,
+            $genre,
+            $year,
+            $order,
+            $page,
+            self::MOVIES_PER_PAGE
+        );
+
+        if ($page > $moviesPage->getPageCount()) {
+            return $this->redirectToRoute('app_home', $queryParameters);
+        }
 
         $releaseYears = [];
 
-        if ($title === null || trim($title) === '') {
+        if (!$hasTitleSearch) {
             $releaseYears = $movieRepository->findReleaseYears(); // pobieramy filtry (rok/lata) tylko jeśli nie podano tytułu (zgodne z założeniami)
         }
 
@@ -96,9 +133,12 @@ final class HomeController extends AbstractController
 
 
         return $this->render('home/index.html.twig', [
-            'movies' => $movies,
+            'movies' => $moviesPage->getItems(),
             'genres' => $genres,
             'releaseYears' => $releaseYears,
+            'currentPage' => $page,
+            'totalPages' => $moviesPage->getPageCount(),
+            'queryParameters' => $queryParameters,
             // 'order' => $order,
         ]);
     }

@@ -4,6 +4,9 @@ namespace App\Repository;
 
 use App\Entity\Movie;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Tools\Pagination\OffsetPaginator;
+use Doctrine\ORM\Tools\Pagination\Window;
+use Doctrine\ORM\Tools\Pagination\WindowPage;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -67,8 +70,10 @@ class MovieRepository extends ServiceEntityRepository
         ?string $title,
         ?string $genre,
         ?string $year,
-        ?string $order
-    ): array {
+        ?string $order,
+        int $page,
+        int $moviesPerPage
+    ): WindowPage {
         
         /*
         Previous logic added each provided parameter independently:
@@ -135,7 +140,10 @@ class MovieRepository extends ServiceEntityRepository
             }
         }
 
-        return $qb->getQuery()->getResult();
+        $paginator = new OffsetPaginator();
+        $window = Window::fromPageNumberAndSize($page, $moviesPerPage);
+
+        return $paginator->paginate($qb->getQuery(), $window);
     }
 
 //    /**

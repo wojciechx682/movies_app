@@ -24,7 +24,7 @@
         <script src="https://cdn.jsdelivr.net/npm/frankenphp-hot-reload/+esm" type="module"></script>
         {% endif %}
     </head>
-    <body>
+    <body class="d-flex flex-column min-vh-100">
 
         {% set titleSearch = app.request.query.get('title', '')|trim %}
 
@@ -94,11 +94,16 @@
 
                                     <ul class="dropdown-menu">
                                         <li>
-                                            <a class="dropdown-item" href="{{ path('app_home', app.request.query.all()|merge({order: 'title_asc'})) }}">Title A–Z</a>
-                                            <a class="dropdown-item" href="{{ path('app_home', app.request.query.all()|merge({order: 'title_desc'})) }}">Title Z-A</a>
-                                            <a class="dropdown-item" href="{{ path('app_home', app.request.query.all()|merge({order: 'year_desc'})) }}">Newest</a>
-                                            <a class="dropdown-item" href="{{ path('app_home', app.request.query.all()|merge({order: 'year_asc'})) }}">Oldest</a>
-                                            <a class="dropdown-item" href="{{ path('app_home', app.request.query.all()|merge({order: 'created_at_desc'})) }}">Recently added</a>
+                                            {# <a class="dropdown-item" href="{{ path('app_home', app.request.query.all()|merge({order: 'title_asc'})) }}">Title A–Z</a> #}
+                                            <a class="dropdown-item" href="{{ path('app_home', queryParameters|merge({order: 'title_asc'})) }}">Title A–Z</a>
+                                            {# <a class="dropdown-item" href="{{ path('app_home', app.request.query.all()|merge({order: 'title_desc'})) }}">Title Z-A</a> #}
+                                            <a class="dropdown-item" href="{{ path('app_home', queryParameters|merge({order: 'title_desc'})) }}">Title Z-A</a>
+                                            {# <a class="dropdown-item" href="{{ path('app_home', app.request.query.all()|merge({order: 'year_desc'})) }}">Newest</a> #}
+                                            <a class="dropdown-item" href="{{ path('app_home', queryParameters|merge({order: 'year_desc'})) }}">Newest</a>
+                                            {# <a class="dropdown-item" href="{{ path('app_home', app.request.query.all()|merge({order: 'year_asc'})) }}">Oldest</a> #}
+                                            <a class="dropdown-item" href="{{ path('app_home', queryParameters|merge({order: 'year_asc'})) }}">Oldest</a>
+                                            {# <a class="dropdown-item" href="{{ path('app_home', app.request.query.all()|merge({order: 'created_at_desc'})) }}">Recently added</a> #}
+                                            <a class="dropdown-item" href="{{ path('app_home', queryParameters|merge({order: 'created_at_desc'})) }}">Recently added</a>
                                         </li>
                                     </ul>
                                 </div>

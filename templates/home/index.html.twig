@@ -6,7 +6,7 @@
 
     {% set titleSearch = app.request.query.get('title', '')|trim %}
 
-    <div class="container mt-3">
+    <div class="container mt-3 flex-grow-1 d-flex flex-column">
 
         {% if titleSearch is not empty %}
             <div class="d-flex align-items-center justify-content-between gap-3 mb-3">
@@ -21,6 +21,7 @@
             </div>
         {% endif %} #}
 
+        {# <div class="row g-3 flex-grow-1"> #}
         <div class="row g-3">
             {% for movie in movies %}
                 <div class="col-sm-6 col-md-4 col-lg-3">
@@ -83,5 +84,43 @@
                 {% endif %}
             {% endfor %}
         </div>
+
+        {% if totalPages > 1 %}
+            <nav class="mt-auto pt-4" aria-label="Movie pagination">
+                <ul class="pagination justify-content-center mb-0">
+                    <li class="page-item {% if currentPage == 1 %}disabled{% endif %}">
+                        {% if currentPage > 1 %}
+                            <a class="page-link" href="{{ path('app_home', queryParameters|merge({page: currentPage - 1})) }}" aria-label="Previous page">
+                                Previous
+                            </a>
+                        {% else %}
+                            <span class="page-link">Previous</span>
+                        {% endif %}
+                    </li>
+
+                    {% for pageNumber in 1..totalPages %}
+                        <li class="page-item {% if pageNumber == currentPage %}active{% endif %}">
+                            {% if pageNumber == currentPage %}
+                                <span class="page-link" aria-current="page">{{ pageNumber }}</span>
+                            {% else %}
+                                <a class="page-link" href="{{ path('app_home', queryParameters|merge({page: pageNumber})) }}" aria-label="Go to page {{ pageNumber }}">
+                                    {{ pageNumber }}
+                                </a>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+
+                    <li class="page-item {% if currentPage == totalPages %}disabled{% endif %}">
+                        {% if currentPage < totalPages %}
+                            <a class="page-link" href="{{ path('app_home', queryParameters|merge({page: currentPage + 1})) }}" aria-label="Next page">
+                                Next
+                            </a>
+                        {% else %}
+                            <span class="page-link">Next</span>
+                        {% endif %}
+                    </li>
+                </ul>
+            </nav>
+        {% endif %}
     </div>
 {% endblock %}
