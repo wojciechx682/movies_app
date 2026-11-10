@@ -28,9 +28,11 @@
                                 >
                             </a>
                         {% else %}
-                            <div class="movie-poster movie-poster--placeholder">
-                                <span>Poster unavailable</span>
-                            </div>
+                            <a class="movie-poster-link" href="{{ path('app_movie_show', { id: movie.id }) }}">
+                                <div class="movie-poster movie-poster--placeholder">
+                                    <span>Poster unavailable</span>
+                                </div>
+                            </a>
                         {% endif %}
                         <div class="movie-tile-content">
                             <div>
