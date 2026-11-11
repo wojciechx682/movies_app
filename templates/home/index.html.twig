@@ -63,6 +63,8 @@
                                         <span class="badge rounded-pill text-bg-secondary">{{ genre.name }}</span>
                                     {% endfor %}
                                 </div>
+                            {% else %}
+                                <div class="small text-body-secondary">No assigned genres</div>
                             {% endif %}
 
 {#                            <div>{{ movie.description }}</div>#}

@@ -83,10 +83,18 @@ final class GenreController extends AbstractController
     public function delete(Request $request, Genre $genre, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$genre->getId(), $request->getPayload()->getString('_token'))) {
+            $movieCount = $genre->getMovies()->count();
+
             $entityManager->remove($genre);
             $entityManager->flush();
 
-            $this->addFlash('success', 'Genre was deleted successfully');
+            // $this->addFlash('success', 'Genre was deleted successfully');
+            if ($movieCount > 0) {
+                $movieWord = $movieCount === 1 ? 'movie' : 'movies';
+                $this->addFlash('success', 'Genre deleted and removed from ' . $movieCount . ' ' . $movieWord);
+            } else {
+                $this->addFlash('success', 'Genre deleted successfully');
+            }
         } else {
             $this->addFlash('danger', 'The genre could not be deleted');
         }

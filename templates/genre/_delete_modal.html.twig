@@ -1,0 +1,35 @@
+{% set movieCount = genre.movies|length %}
+
+<div
+    class="modal fade"
+    id="deleteGenreModal-{{ genre.id }}"
+    tabindex="-1"
+    aria-labelledby="deleteGenreModalLabel-{{ genre.id }}"
+    aria-hidden="true"
+>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="deleteGenreModalLabel-{{ genre.id }}">Delete genre?</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                {% if movieCount > 0 %}
+                    <p>
+                        This genre is assigned to {{ movieCount }} movie{% if movieCount != 1 %}s{% endif %}. Deleting it will remove the genre from the assigned movie{% if movieCount != 1 %}s{% endif %}. The movies and their reviews will remain
+                    </p>
+                {% else %}
+                    <p>This genre is not assigned to any movies</p>
+                {% endif %}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+
+                <form method="post" action="{{ path('app_genre_delete', {'id': genre.id}) }}">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ genre.id) }}">
+                    <button type="submit" class="btn btn-danger">Delete genre</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

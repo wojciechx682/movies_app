@@ -86,5 +86,11 @@
         {% if is_granted('ROLE_ADMIN') %}
             <a href="{{ path('app_genre_new') }}">Create new</a>
         {% endif %} #}
+
+        {% if is_granted('ROLE_ADMIN') %}
+            {% for genre in genres %}
+                {{ include('genre/_delete_modal.html.twig', {genre: genre}) }}
+            {% endfor %}
+        {% endif %}
     </div>
 {% endblock %}
