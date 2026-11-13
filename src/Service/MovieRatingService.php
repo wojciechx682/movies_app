@@ -50,10 +50,24 @@ class MovieRatingService
             }
         }
 
+        /*
         $ratingAverage = $count > 0 ? round($sum / $count, 1) : null; // 6.7
         $starDisplay = $count > 0 ? round(($sum / $count) * 2) / 2 : null; // 6.5
         $decimalPart = $starDisplay - ((int) floor($starDisplay)); // 0.5
         $remainingStars = 10 - ceil($starDisplay); // 3.0
+        */
+
+        $ratingAverage = null;
+        $starDisplay = null;
+        $decimalPart = 0;
+        $remainingStars = 0;
+
+        if ($count > 0) {
+            $ratingAverage = round($sum / $count, 1); // 6.7
+            $starDisplay = round(($sum / $count) * 2) / 2; // 6.5
+            $decimalPart = $starDisplay - ((int) floor($starDisplay)); // 0.5
+            $remainingStars = 10 - ceil($starDisplay); // 3.0
+        }
 
         return [ 
             'reviews' => $reviews,
