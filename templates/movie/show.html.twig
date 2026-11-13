@@ -51,7 +51,10 @@
                     </div>                    
                 {% endif %}
 
-                <div>{{ formattedRuntime }}</div>
+                {# <div>{{ formattedRuntime }}</div> #}
+                {% if formattedRuntime is not null %}
+                    <div>{{ formattedRuntime }}</div>
+                {% endif %}
 
                 <div>Director: {{ movie.director }}</div>
 
@@ -235,6 +238,8 @@
                     </div>
                 {% endif %}         
             </div>        
+        {% else %}
+            <div>No reviews yet</div>
         {% endfor %}
 
         {%  if not app.user %}            
