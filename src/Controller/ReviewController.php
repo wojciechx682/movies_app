@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Review;
 use App\Form\ReviewType;
-use App\Repository\ReviewRepository;
+// use App\Repository\ReviewRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -12,56 +12,57 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-use App\Entity\User;
-use Symfony\Component\Security\Http\Attribute\CurrentUser;
+// use App\Entity\User;
+// use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
 #[Route('/review')]
 final class ReviewController extends AbstractController
 {
-    #[Route(name: 'app_review_index', methods: ['GET'])]
-    public function index(ReviewRepository $reviewRepository): Response
-    {       
-        return $this->render('review/index.html.twig', [
-            'reviews' => $reviewRepository->findAll(),
-        ]);
-    }
+    // #[Route(name: 'app_review_index', methods: ['GET'])]
+    // public function index(ReviewRepository $reviewRepository): Response
+    // {
+    //     return $this->render('review/index.html.twig', [
+    //         'reviews' => $reviewRepository->findAll(),
+    //     ]);
+    // }
 
-    #[IsGranted('ROLE_USER')]
-    #[Route('/new', name: 'app_review_new', methods: ['GET', 'POST'])]
-    public function new(
-        Request $request,
-        EntityManagerInterface $entityManager,
-        #[CurrentUser] User $user,
-    ): Response
-    {
-        $review = new Review();
-        $review->setUser($user); // currently logged-in User
+    // Review creation now happens in MovieController::show().
+    // #[IsGranted('ROLE_USER')]
+    // #[Route('/new', name: 'app_review_new', methods: ['GET', 'POST'])]
+    // public function new(
+    //     Request $request,
+    //     EntityManagerInterface $entityManager,
+    //     #[CurrentUser] User $user,
+    // ): Response
+    // {
+    //     $review = new Review();
+    //     $review->setUser($user); // currently logged-in User
+    //
+    //     $form = $this->createForm(ReviewType::class, $review);
+    //     $form->handleRequest($request);
+    //
+    //     if ($form->isSubmitted() && $form->isValid()) {
+    //         $entityManager->persist($review);
+    //         $entityManager->flush();
+    //
+    //         $this->addFlash('success', 'Your review was added successfully');
+    //
+    //         return $this->redirectToRoute('app_review_index', [], Response::HTTP_SEE_OTHER);
+    //     }
+    //
+    //     return $this->render('review/new.html.twig', [
+    //         'review' => $review,
+    //         'form' => $form,
+    //     ]);
+    // }
 
-        $form = $this->createForm(ReviewType::class, $review);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($review);
-            $entityManager->flush();
-
-            $this->addFlash('success', 'Your review was added successfully');
-
-            return $this->redirectToRoute('app_review_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->render('review/new.html.twig', [
-            'review' => $review,
-            'form' => $form,
-        ]);
-    }
-
-    #[Route('/{id}', name: 'app_review_show', methods: ['GET'])]
-    public function show(Review $review): Response
-    {
-        return $this->render('review/show.html.twig', [
-            'review' => $review,
-        ]);
-    }
+    // #[Route('/{id}', name: 'app_review_show', methods: ['GET'])]
+    // public function show(Review $review): Response
+    // {
+    //     return $this->render('review/show.html.twig', [
+    //         'review' => $review,
+    //     ]);
+    // }
 
     #[IsGranted('ROLE_USER')]
     #[Route('/{id}/edit', name: 'app_review_edit', methods: ['GET', 'POST'])]
@@ -97,7 +98,7 @@ final class ReviewController extends AbstractController
     }
 
     #[IsGranted('ROLE_USER')]
-    #[Route('/{id}', name: 'app_review_delete', methods: ['POST'])]
+    #[Route('/{id}/delete', name: 'app_review_delete', methods: ['POST'])]
     public function delete(Request $request, Review $review, EntityManagerInterface $entityManager): Response
     {
         if ($review->getUser() !== $this->getUser()) {
