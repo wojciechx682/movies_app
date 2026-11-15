@@ -1,4 +1,43 @@
+<button
+    type="button"
+    class="btn btn-danger"
+    data-bs-toggle="modal"
+    data-bs-target="#deleteReviewModal-{{ review.id }}"
+>
+    Delete
+</button>
+
+<div
+    class="modal fade"
+    id="deleteReviewModal-{{ review.id }}"
+    tabindex="-1"
+    aria-labelledby="deleteReviewModalLabel-{{ review.id }}"
+    aria-hidden="true"
+>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="deleteReviewModalLabel-{{ review.id }}">Delete review?</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to permanently delete your review for “{{ review.movie.title }}”? This action cannot be undone</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+
+                <form method="post" action="{{ path('app_review_delete', {'id': review.id}) }}">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ review.id) }}">
+                    <button type="submit" class="btn btn-danger">Delete review</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{# Previous browser confirm form kept for reference
 <form method="post" action="{{ path('app_review_delete', {'id': review.id}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ review.id) }}">
     <button class="btn btn-danger">Delete</button>
 </form>
+#}
