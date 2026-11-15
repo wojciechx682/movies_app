@@ -190,7 +190,7 @@
 
             <div class="d-flex align-items-center gap-2 mb-4">
 
-                <a href="{{ path('app_movie_edit', {'id': movie.id}) }}">edit</a>
+                <a class="btn btn-outline-primary" href="{{ path('app_movie_edit', {'id': movie.id}) }}">edit</a>
 
                 {# {{ include('movie/_delete_form.html.twig') }} #}
                 <button
@@ -231,7 +231,7 @@
                 <div>{{ review.content ? review.content : 'Rating without comment' }}</div>             
                 {% if app.user and review.user is same as(app.user) %}
                     <div class="d-flex align-items-center gap-2">
-                        <a href="{{ path('app_review_edit', {id: review.id}) }}" >
+                        <a class="btn btn-outline-primary" href="{{ path('app_review_edit', {id: review.id}) }}" >
                             edit
                         </a>
                         {{ include('review/_delete_form.html.twig') }}

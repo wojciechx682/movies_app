@@ -51,7 +51,7 @@
                     <td>
                         <a href="{{ path('app_movie_show', {'id': movie.id}) }}">show</a>
                         {% if is_granted('ROLE_ADMIN') %}
-                            <a href="{{ path('app_movie_edit', {'id': movie.id}) }}">edit</a>
+                            <a class="btn btn-outline-primary" href="{{ path('app_movie_edit', {'id': movie.id}) }}">edit</a>
                         {% endif %}
                     </td>
                 </tr>

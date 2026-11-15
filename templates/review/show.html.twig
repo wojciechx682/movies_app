@@ -33,10 +33,10 @@
 
         <a href="{{ path('app_movie_show', {id: review.movie.id}) }}">Back to movie</a>
 
-{#        <a href="{{ path('app_review_edit', {'id': review.id}) }}">edit</a>#}
+{#        <a class="btn btn-outline-primary" href="{{ path('app_review_edit', {'id': review.id}) }}">edit</a>#}
 
         {% if app.user and review.user is same as(app.user) %}
-            <a href="{{ path('app_review_edit', {'id': review.id}) }}">edit</a>
+            <a class="btn btn-outline-primary" href="{{ path('app_review_edit', {'id': review.id}) }}">edit</a>
             {{ include('review/_delete_form.html.twig') }}
         {% endif %}
 

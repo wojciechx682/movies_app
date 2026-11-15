@@ -15,7 +15,7 @@
                     <div class="col-sm-6 d-flex align-items-center gap-2 mb-4">{{ genre.name }}</div>
                     <div class="col-sm-6 d-flex justify-content-end align-items-center gap-2 mb-4">
                         {% if is_granted('ROLE_ADMIN') %}
-                            <a href="{{ path('app_genre_edit', {'id': genre.id}) }}">edit</a>
+                            <a class="btn btn-outline-primary" href="{{ path('app_genre_edit', {'id': genre.id}) }}">edit</a>
                             {{ include('genre/_delete_form.html.twig') }}
                         {% endif %}
                     </div>
@@ -25,7 +25,7 @@
                     <div class="col">{{ genre.name }}</div>
                     <div class="col-auto d-flex justify-content-end align-items-center gap-2">
                         {% if is_granted('ROLE_ADMIN') %}
-                            <a href="{{ path('app_genre_edit', {'id': genre.id}) }}">edit</a>
+                            <a class="btn btn-outline-primary" href="{{ path('app_genre_edit', {'id': genre.id}) }}">edit</a>
                             {{ include('genre/_delete_form.html.twig') }}
                         {% endif %}
                     </div>
@@ -36,7 +36,7 @@
                         <div>{{ genre.name }}</div>
                         <div class="d-flex align-items-center gap-2">
                             {% if is_granted('ROLE_ADMIN') %}
-                                <a href="{{ path('app_genre_edit', {'id': genre.id}) }}">edit</a>
+                                <a class="btn btn-outline-primary" href="{{ path('app_genre_edit', {'id': genre.id}) }}">edit</a>
                                 {{ include('genre/_delete_form.html.twig') }}
                             {% endif %}
                         </div>
@@ -70,7 +70,7 @@
                     <td>{{ genre.name }}</td>
                     <td>                           
                         {% if is_granted('ROLE_ADMIN') %}
-                            <a href="{{ path('app_genre_edit', {'id': genre.id}) }}">edit</a>
+                            <a class="btn btn-outline-primary" href="{{ path('app_genre_edit', {'id': genre.id}) }}">edit</a>
                             {{ include('genre/_delete_form.html.twig') }}
                         {% endif %}
                     </td>
