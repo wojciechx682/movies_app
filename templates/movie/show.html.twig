@@ -6,7 +6,7 @@
 
     <div class="container mt-3">
         
-        <div class="row g-3">
+        <div class="row g-3 mb-4">
 
             <div class="col-sm-4 col-md-4 col-lg-2">
                 <div class="movie-tile h-100">
@@ -29,38 +29,55 @@
             </div>
 
             <div class="col">
+                {#
                 <div class="movie-title">{{ movie.title }}</div>
 
-                {% if movie.originalTitle %}   
-                    <div>{{ movie.originalTitle }} {{ movie.releaseYear }}</div>                 
+                {% if movie.originalTitle %}
+                    <div>{{ movie.originalTitle }} {{ movie.releaseYear }}</div>
                     <div>
                         {% for genre in movie.genres %}
                             {{ genre.name }}{% if not loop.last %}, {% endif %}
                         {% else %}
                             No assigned genres
                         {% endfor %}
-                    </div>                    
-                {% else %} 
-                    <div>{{ movie.releaseYear }}</div>                   
+                    </div>
+                {% else %}
+                    <div>{{ movie.releaseYear }}</div>
                     <div>
                         {% for genre in movie.genres %}
                             {{ genre.name }}{% if not loop.last %}, {% endif %}
                         {% else %}
                             No assigned genres
                         {% endfor %}
-                    </div>                    
+                    </div>
                 {% endif %}
+                #}
+
+                <h1 class="mb-1">{{ movie.title }}</h1>
+
+                <div class="text-body-secondary mb-2">
+                    {% if movie.originalTitle %}{{ movie.originalTitle }} · {% endif %}{{ movie.releaseYear }}
+                </div>
+
+                <div class="d-flex flex-wrap gap-2 mb-2">
+                    {% for genre in movie.genres %}
+                        <span class="badge rounded-pill text-bg-secondary">{{ genre.name }}</span>
+                    {% else %}
+                        <span class="text-body-secondary">No assigned genres</span>
+                    {% endfor %}
+                </div>
 
                 {# <div>{{ formattedRuntime }}</div> #}
                 {% if formattedRuntime is not null %}
                     <div>{{ formattedRuntime }}</div>
                 {% endif %}
 
-                <div>Director: {{ movie.director }}</div>
+                <div class="mb-2">Director: {{ movie.director }}</div>
 
                 {# <div>{{ ratingAverage }}</div> #}
 
                 {% if ratingAverage is not null %}
+                    {#
                     {% for i in 1..starDisplay|round(0, 'floor') %}
                         <i class="bi bi-star-fill"></i>
                     {% endfor %}
@@ -73,17 +90,15 @@
                         {% for i in 1..remainingStars %}
                             <i class="bi bi-star"></i>
                         {% endfor %}
-                        
                     {% endif %}
 
                     ({{ ratingAverage }})
 
                     <div>
-
                         {% if count < 2 %}
                             {{ count }} rating, {{ commentsCount }} comment
                         {% else %}
-                            {{ count }} ratings, 
+                            {{ count }} ratings,
                             {% if commentsCount < 2 %}
                                 {{ commentsCount }} comment
                             {% else %}
@@ -91,8 +106,46 @@
                             {% endif %}
                         {% endif %}
                     </div>
+                    #}
+
+                    <div class="d-flex align-items-center flex-wrap gap-2 mb-3">
+                        <div
+                            class="d-flex align-items-center gap-1"
+                            role="img"
+                            aria-label="Rating {{ ratingAverage }} out of 10"
+                        >
+                            {% for i in 1..starDisplay|round(0, 'floor') %}
+                                <i class="bi bi-star-fill" aria-hidden="true"></i>
+                            {% endfor %}
+
+                            {% if decimalPart >= 0.5 %}
+                                <i class="bi bi-star-half" aria-hidden="true"></i>
+                            {% endif %}
+
+                            {% if remainingStars > 0 %}
+                                {% for i in 1..remainingStars %}
+                                    <i class="bi bi-star" aria-hidden="true"></i>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+
+                        <span>{{ ratingAverage|number_format(1) }}/10</span>
+                        <span class="text-body-secondary">
+                            {% if count < 2 %}
+                                {{ count }} rating
+                            {% else %}
+                                {{ count }} ratings
+                            {% endif %}
+
+                            {% if commentsCount < 2 %}
+                                · {{ commentsCount }} comment
+                            {% else %}
+                                · {{ commentsCount }} comments
+                            {% endif %}
+                        </span>
+                    </div>
                 {% else %}
-                    <div>No ratings</div>
+                    <div class="text-body-secondary mb-3">No ratings</div>
                 {% endif %}
 
 
@@ -117,10 +170,12 @@
         </div>
 
         <div class="row g-3 mb-4">
-            <div class="col">   
-                <h5>Description</h5>             
-                {{ movie.description }}
-            </div>           
+            <div class="col">
+                {# <h5>Description</h5> #}
+                {# {{ movie.description }} #}
+                <h2 class="h4 mb-2">Description</h2>
+                <p class="mb-0">{{ movie.description }}</p>
+            </div>
         </div>
 
         
@@ -216,39 +271,82 @@
             {{ include('movie/_review_form.html.twig') }}            
         {% endif %} #}
 
+        {#
         {% if app.user and userReview is null %}
-            <div class="row g-3 review mb-4 p-2 border rounded"> 
+            <div class="row g-3 review mb-4 p-2 border rounded">
                 {{ include('movie/_review_form.html.twig', {form: reviewForm}) }}
             </div>
         {% elseif app.user %}
-            {# <p>Masz już recenzję tego filmu.</p> #}
+        #}
+        {# <p>Masz już recenzję tego filmu.</p> #}
+        {#
         {% endif %}
 
-        {% for review in reviews %}            
-            <div class="row g-2 review mb-4 p-2 border rounded">              
+        {% for review in reviews %}
+            <div class="row g-2 review mb-4 p-2 border rounded">
                 <div>Rating: <span class="bold">{{ review.rating }}/10</span></div>
                 <div>{{ review.user.email }} {{ review.createdAt ? review.createdAt|date('d.m.Y H:i:s') : '' }}</div>
-                <div>{{ review.content ? review.content : 'Rating without comment' }}</div>             
+                <div>{{ review.content ? review.content : 'Rating without comment' }}</div>
                 {% if app.user and review.user is same as(app.user) %}
                     <div class="d-flex align-items-center gap-2">
-                        <a class="btn btn-outline-primary" href="{{ path('app_review_edit', {id: review.id}) }}" >
+                        <a class="btn btn-outline-primary" href="{{ path('app_review_edit', {id: review.id}) }}">
                             edit
                         </a>
                         {{ include('review/_delete_form.html.twig') }}
                     </div>
-                {% endif %}         
-            </div>        
+                {% endif %}
+            </div>
         {% else %}
             <div>No reviews yet</div>
         {% endfor %}
 
-        {%  if not app.user %}            
-
+        {% if not app.user %}
             <div>
                 <a href="{{ path('app_login') }}">Sign in</a> to rate this movie or leave a review
-            </div>            
+            </div>
+        {% endif %}
+        #}
 
-        {%  endif %}
+        <section class="mt-3">
+            <div class="d-flex align-items-center justify-content-between flex-wrap gap-3 mb-3">
+                <h2 class="h4 mb-0">Reviews ({{ reviews|length }})</h2>
+
+                {% if not app.user %}
+                    <a class="btn btn-outline-primary" href="{{ path('app_login') }}">Sign in to rate or review</a>
+                {% endif %}
+            </div>
+
+            {% if app.user and userReview is null %}
+                <div class="review mb-4 p-3 border rounded">
+                    {{ include('movie/_review_form.html.twig', {form: reviewForm}) }}
+                </div>
+            {% endif %}
+
+            {% for review in reviews %}
+                <div class="review mb-3 p-3 border rounded">
+                    <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-2">
+                        <div>Rating: <span class="bold">{{ review.rating }}/10</span></div>
+                        <div class="text-body-secondary">
+                            {{ review.user.email }}
+                            {{ review.createdAt ? review.createdAt|date('d.m.Y H:i:s') : '' }}
+                        </div>
+                    </div>
+
+                    <div class="mb-2">{{ review.content ? review.content : 'Rating without comment' }}</div>
+
+                    {% if app.user and review.user is same as(app.user) %}
+                        <div class="d-flex align-items-center gap-2">
+                            <a class="btn btn-outline-primary" href="{{ path('app_review_edit', {id: review.id}) }}">
+                                edit
+                            </a>
+                            {{ include('review/_delete_form.html.twig') }}
+                        </div>
+                    {% endif %}
+                </div>
+            {% else %}
+                <div class="text-body-secondary">No reviews yet</div>
+            {% endfor %}
+        </section>
 
         {% if is_granted('ROLE_ADMIN') %}
             {% set reviewCount = reviews|length %}
