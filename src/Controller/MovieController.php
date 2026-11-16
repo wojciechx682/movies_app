@@ -197,10 +197,16 @@ final class MovieController extends AbstractController
         PosterUploader $posterUploader
     ): Response
     {
-        $form = $this->createForm(MovieType::class, $movie);
+        $form = $this->createForm(MovieType::class, $movie, [
+            'show_remove_poster' => $movie->getPosterPath() !== null,
+        ]);
+        
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            /*
+            Previous edit logic uploaded the new poster but left the old file behind:
 
             $posterFile = $form->get('posterFile')->getData();
 
@@ -212,23 +218,76 @@ final class MovieController extends AbstractController
                 }
 
                 $movie->setUpdatedAt(new \DateTimeImmutable());
-
                 //$entityManager->persist($movie);
                 $entityManager->flush();
 
                 $this->addFlash('success', 'Movie was updated successfully');
-
-                $movieId = $movie->getId();            
+                $movieId = $movie->getId();
 
                 return $this->redirectToRoute(
                     'app_movie_show',
                     ['id' => $movieId],
                     Response::HTTP_SEE_OTHER
                 );
-                
             } catch (FileException $exception) {
                 $form->get('posterFile')->addError(
                     new FormError('Nie udało się zapisać plakatu, spróbuj ponownie')
+                );
+            }
+            */
+
+            $previousPosterPath = $movie->getPosterPath();
+            $newPosterPath = null;
+            $posterFile = $form->get('posterFile')->getData();
+            $removePoster = $form->has('removePoster') && $form->get('removePoster')->getData();
+            $movieSaved = false;
+
+            try {
+                if ($posterFile instanceof UploadedFile) {
+                    $newPosterPath = $posterUploader->upload($posterFile);
+                    $movie->setPosterPath($newPosterPath);
+                } elseif ($removePoster) {
+                    $movie->setPosterPath(null);
+                }
+
+                $movie->setUpdatedAt(new \DateTimeImmutable());
+                $entityManager->flush();
+                $movieSaved = true;
+            } catch (FileException $exception) {
+                if ($newPosterPath !== null) {
+                    $posterUploader->delete($newPosterPath);
+                }
+
+                $movie->setPosterPath($previousPosterPath);
+
+                $form->get('posterFile')->addError(
+                    new FormError('Nie udało się zapisać plakatu, spróbuj ponownie')
+                );
+            } catch (\Throwable $exception) {
+                if ($newPosterPath !== null) {
+                    $posterUploader->delete($newPosterPath);
+                }
+
+                $movie->setPosterPath($previousPosterPath);
+
+                throw $exception;
+            }
+
+            if ($movieSaved) {
+                if ($previousPosterPath !== $movie->getPosterPath()) {
+                    if (!$posterUploader->delete($previousPosterPath)) {
+                        $this->addFlash('warning', 'The old poster could not be deleted');
+                    }
+                }
+
+                $this->addFlash('success', 'Movie was updated successfully');
+
+                $movieId = $movie->getId();
+
+                return $this->redirectToRoute(
+                    'app_movie_show',
+                    ['id' => $movieId],
+                    Response::HTTP_SEE_OTHER
                 );
             }
 
@@ -245,13 +304,24 @@ final class MovieController extends AbstractController
 
     #[IsGranted('ROLE_ADMIN')]
     #[Route('/{id}/delete', name: 'app_movie_delete', methods: ['POST'])]
-    public function delete(Request $request, Movie $movie, EntityManagerInterface $entityManager): Response
+    public function delete(
+        Request $request,
+        Movie $movie,
+        EntityManagerInterface $entityManager,
+        PosterUploader $posterUploader
+    ): Response
     {
         if ($this->isCsrfTokenValid('delete'.$movie->getId(), $request->getPayload()->getString('_token'))) {
+            $posterPath = $movie->getPosterPath();
+
             $entityManager->remove($movie);
             $entityManager->flush();
 
             $this->addFlash('success', 'Movie was deleted successfully');
+
+            if (!$posterUploader->delete($posterPath)) {
+                $this->addFlash('warning', 'The movie was deleted, but its poster could not be removed');
+            }
         } else {
             $this->addFlash('danger', 'Movie could not be deleted');
         }

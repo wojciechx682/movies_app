@@ -6,6 +6,7 @@ use App\Entity\Genre;
 use App\Entity\Movie;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -33,6 +34,9 @@ class MovieType extends AbstractType
                     ),
                 ],
             ])
+            /*
+            Previous field order added genres directly after the poster field:
+
 //            ->add('createdAt', null, [
 //                'widget' => 'single_text'
 //            ])
@@ -41,13 +45,29 @@ class MovieType extends AbstractType
                 'choice_label' => 'name',
                 'multiple' => true,
             ])
+            */
         ;
+
+        if ($options['show_remove_poster']) {
+            $builder->add('removePoster', CheckboxType::class, [
+                'mapped' => false,
+                'required' => false,
+                'label' => 'Remove current poster',
+            ]);
+        }
+
+        $builder->add('genres', EntityType::class, [
+            'class' => Genre::class,
+            'choice_label' => 'name',
+            'multiple' => true,
+        ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Movie::class,
+            'show_remove_poster' => false,
         ]);
     }
 }

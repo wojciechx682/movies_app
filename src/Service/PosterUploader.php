@@ -8,6 +8,8 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 final class PosterUploader
 {
+    private const POSTER_PATH_PREFIX = 'uploads/posters/';
+
     public function __construct(
         #[Autowire('%kernel.project_dir%/public/uploads/posters')]
         private string $targetDirectory,
@@ -26,6 +28,35 @@ final class PosterUploader
 
         $file->move($this->targetDirectory, $filename);
 
-        return 'uploads/posters/'.$filename;
+        // Previous return value:
+        // return 'uploads/posters/'.$filename;
+        return self::POSTER_PATH_PREFIX.$filename;
+    }
+
+    public function delete(?string $posterPath): bool
+    {
+        if ($posterPath === null) {
+            return true;
+        }
+
+        $posterPath = str_replace('\\', '/', $posterPath);
+
+        if (!str_starts_with($posterPath, self::POSTER_PATH_PREFIX)) {
+            return false;
+        }
+
+        $filename = basename($posterPath);
+
+        if ($filename === '' || $filename === '.' || $filename === '..') {
+            return false;
+        }
+
+        $posterFilePath = $this->targetDirectory.DIRECTORY_SEPARATOR.$filename;
+
+        if (!is_file($posterFilePath)) {
+            return true;
+        }
+
+        return @unlink($posterFilePath);
     }
 }
