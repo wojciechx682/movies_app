@@ -1,0 +1,25 @@
+# Git i IDE
+**/.git
+**/.gitignore
+**/.idea
+**/.vscode
+
+# Pliki Dockera
+**/.dockerignore
+**/Dockerfile*
+**/compose.y*ml
+**/docker-compose*
+
+# Symfony: pliki generowane lokalnie
+**/vendor
+**/var
+**/.phpunit.cache
+**/public/assets
+
+# Lokalne sekrety (nie wrzucaj ich do obrazu)
+**/.env.local
+**/.env.*.local
+**/.env.local.php
+
+LICENSE
+README.md
