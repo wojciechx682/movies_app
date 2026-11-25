@@ -7,6 +7,7 @@ Movies App to rozwijana aplikacja MVP do przeglądania katalogu filmów, ocenian
 - Katalog filmów z wyszukiwaniem po tytule
 - Filtrowanie filmów według gatunku i roku wydania; gatunek i rok można łączyć
 - Sortowanie według tytułu A–Z, tytułu Z–A, najnowszego lub najstarszego roku wydania oraz daty dodania filmu
+- Paginacja katalogu filmów
 - Szczegóły filmu: opis, reżyser, gatunki, plakat i recenzje
 - Średnia ocena prezentowana liczbowo i w postaci gwiazdek, liczba ocen oraz liczba komentarzy
 - Rejestracja, logowanie i wylogowanie; hasła są przechowywane jako hash
@@ -22,21 +23,102 @@ Movies App to rozwijana aplikacja MVP do przeglądania katalogu filmów, ocenian
 
 ## Technologie
 
-- PHP 8.5
+- PHP 8.5 (obraz Dockera używa PHP 8.4; projekt wymaga PHP 8.4 lub nowszego)
 - Symfony 8.1
 - Doctrine ORM i Doctrine Migrations
 - MySQL
 - Twig
 - Bootstrap 5.3
+- Docker i Docker Compose (Apache + PHP, MySQL 8.4)
 
-## Wymagania
+## Uruchomienie w Dockerze (zalecane)
 
-- PHP 8.5+ z rozszerzeniem PDO MySQL
+Najszybszy sposób na uruchomienie projektu. Nie wymaga lokalnej instalacji PHP, Composera ani MySQL.
+
+### Wymagania
+
+- Git
+- Docker Desktop (Windows, macOS) albo Docker Engine z wtyczką Docker Compose (Linux)
+
+W instrukcji używana jest komenda `docker compose` (ze spacją, Docker Compose v2).
+
+### Pierwsze uruchomienie
+
+1. Sklonuj repozytorium i przejdź do katalogu projektu
+
+   ```bash
+   git clone <adres-repozytorium>
+   cd movies_app
+   ```
+
+2. Zbuduj obrazy i uruchom kontenery w tle
+
+   ```bash
+   docker compose up -d --build
+   ```
+
+   Pierwsze budowanie trwa kilka minut i wymaga dostępu do internetu. Aplikacja (`server`) startuje dopiero wtedy, gdy baza danych (`db`) jest gotowa.
+
+3. Utwórz tabele w bazie danych
+
+   ```bash
+   docker compose exec server php bin/console doctrine:migrations:migrate --no-interaction
+   ```
+
+4. Utwórz konto administratora
+
+   ```bash
+   docker compose exec server php bin/console app:create-admin
+   ```
+
+   Komenda jest interaktywna: poprosi o adres email, hasło i jego powtórzenie, a na końcu o potwierdzenie (wpisz `y`).
+
+5. Otwórz aplikację w przeglądarce: http://localhost:9000/home
+
+   Zaloguj się kontem administratora na `/login`, a następnie dodaj gatunki (`/genre`) i filmy (`/movie/new`). Projekt nie zawiera przykładowych danych.
+
+   UPDATE po wykryciu błędu - nie można dodać gatunku - następuje wylogowanie po kliknięciu na "Create new" na stronie `/genre`.
+
+   ROZWIĄZANIE: od razu po zalogowaniu wejść pod `/genre/new` i dodać nowy gatunek filmu, zanim doda się sam film
+
+### Przydatne komendy
+
+| Cel | Komenda |
+|---|---|
+| Zatrzymanie kontenerów (dane zostają) | `docker compose down` |
+| Ponowne uruchomienie | `docker compose up -d` |
+| Przebudowanie po zmianie kodu | `docker compose up -d --build` |
+| Status kontenerów | `docker compose ps` |
+| Logi aplikacji | `docker compose logs -f server` |
+| Komenda konsoli Symfony | `docker compose exec server php bin/console <komenda>` |
+| Konsola MySQL | `docker compose exec db mysql -uapp -papp movies_app` |
+| Usunięcie wszystkiego, razem z bazą i plakatami | `docker compose down -v` |
+
+### Jak działa konfiguracja
+
+- Aplikacja jest dostępna pod adresem `http://localhost:9000`. Port zmienisz w `compose.yaml` w sekcji `ports` (lewa liczba)
+- Kod trafia do obrazu podczas budowania, bez podpiętego katalogu projektu, dlatego po zmianach w kodzie trzeba wykonać `docker compose up -d --build`
+- Dane bazy są w wolumenie `db-data`, a wgrane plakaty w wolumenie `uploads`. Przetrwają `docker compose down`, ale znikną po `docker compose down -v`
+- Baza danych: `movies_app`, użytkownik `app`, hasło `app`. Port bazy nie jest wystawiony poza Dockera
+- Konfiguracja jest przeznaczona do lokalnego uruchomienia i demonstracji (`APP_ENV=dev`, proste hasła). Nie używaj jej w produkcji
+
+### Rozwiązywanie problemów
+
+- `service "server" is not running`: kontenery są zatrzymane, uruchom `docker compose up -d`
+- `port is already allocated`: port 9000 jest zajęty. Zmień lewą wartość w `ports` w `compose.yaml` (np. `8080:80`) i uruchom `docker compose up -d`
+- `the input device is not a TTY` w Git Bashu: użyj PowerShella albo cmd, albo poprzedź komendę słowem `winpty`
+- Błędy bazy danych na stronie po pierwszym uruchomieniu: sprawdź, czy wykonano migracje (krok 3)
+
+## Instalacja lokalna (bez Dockera)
+
+### Wymagania
+
+- PHP 8.4+ z rozszerzeniem PDO MySQL
 - Composer
 - Serwer MySQL
 - Symfony CLI — opcjonalnie, do uruchamiania lokalnego serwera (symfony serve)
 
-## Instalacja lokalna
+### Kroki
 
 1. Sklonuj repozytorium i przejdź do katalogu projektu
 
@@ -81,6 +163,10 @@ Movies App to rozwijana aplikacja MVP do przeglądania katalogu filmów, ocenian
 Publiczna rejestracja tworzy zwykłe konto `ROLE_USER`. Konto administratora utwórz interaktywną komendą w terminalu:
 
 ```bash
+# w Dockerze
+docker compose exec server php bin/console app:create-admin
+
+# lokalnie
 php bin/console app:create-admin
 ```
 
@@ -118,7 +204,6 @@ Plakaty są przechowywane jako pliki w `public/uploads/posters`, a w bazie zapis
 
 - Projekt nie zawiera fixtures z przykładowymi filmami. Administrator dodaje filmy przez formularz
 - Wyszukiwanie obejmuje tytuł filmu
-- Paginacja katalogu nie jest jeszcze zaimplementowana
 - Film z istniejącymi recenzjami nie może być obecnie usunięty z powodu ograniczenia klucza obcego
 - Testy funkcjonalne aplikacji nie są jeszcze przygotowane
 
