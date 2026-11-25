@@ -204,7 +204,6 @@ Plakaty są przechowywane jako pliki w `public/uploads/posters`, a w bazie zapis
 
 - Projekt nie zawiera fixtures z przykładowymi filmami. Administrator dodaje filmy przez formularz
 - Wyszukiwanie obejmuje tytuł filmu
-- Film z istniejącymi recenzjami nie może być obecnie usunięty z powodu ograniczenia klucza obcego
 - Testy funkcjonalne aplikacji nie są jeszcze przygotowane
 
 ## Zrzuty ekranu
