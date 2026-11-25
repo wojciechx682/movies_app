@@ -78,15 +78,25 @@ Movies App to rozwijana aplikacja MVP do przeglądania katalogu filmów, ocenian
 
 ## Konto administratora
 
-Publiczna rejestracja tworzy zwykłe konto `ROLE_USER`. Aby nadać istniejącemu kontu rolę administratora w lokalnej bazie MySQL, wykonaj zapytanie, podstawiając email zarejestrowanego konta:
+Publiczna rejestracja tworzy zwykłe konto `ROLE_USER`. Konto administratora utwórz interaktywną komendą w terminalu:
 
-```sql
+```bash
+php bin/console app:create-admin
+```
+
+Komenda poprosi o adres email, hasło i jego powtórzenie. Hasło jest wpisywane bez wyświetlania znaków w terminalu. Email musi być poprawny i unikalny, a hasło musi mieć co najmniej 6 znaków — tak jak w formularzu rejestracji. Na końcu potwierdź utworzenie konta.
+
+Uruchom komendę po skonfigurowaniu połączenia z bazą i wykonaniu migracji. Nie dodawaj `--no-interaction`, ponieważ komenda celowo wymaga interaktywnego terminala.
+
+Uprawnienia administracyjne nie są nadawane przez publiczny formularz rejestracji.
+
+<!--
+Poprzednia ręczna metoda nadania roli istniejącemu kontu:
+
 UPDATE `user`
 SET roles = JSON_ARRAY('ROLE_ADMIN')
 WHERE email = 'admin@example.com';
-```
-
-Nie udostępniaj takiej operacji użytkownikom aplikacji. Uprawnienia administracyjne nie są nadawane przez formularz rejestracji.
+-->
 
 ## Główne adresy
 
